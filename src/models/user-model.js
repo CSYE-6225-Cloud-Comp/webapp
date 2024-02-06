@@ -7,19 +7,30 @@ const User = sequelize.define('user', {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
-        allowNull: false
+        allowNull: false,
     },
     first_name: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            notEmpty: true,
+            is: /^[a-z]+$/i,
+        }
     },
     last_name: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            notEmpty: true,
+            is: /^[a-z]+$/i,
+        }
     },
     password: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notEmpty: true,
+        },
         set(value) {
             // Hashing the password before saving it to db using BCrypt
             const salt = bcrypt.genSaltSync(10);
@@ -32,20 +43,20 @@ const User = sequelize.define('user', {
         allowNull: false,
         unique: true,
         validate: {
-            isEmail: true
+            isEmail: true,
         }
     },
     account_created: {
         type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
         allowNull: false,
         readOnly: true,
-        // defaultValue: () => new Date().toISOString()
     },
     account_updated: {
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
+        defaultValue: DataTypes.NOW,
         allowNull: false,
         readOnly: true,
-        // defaultValue: () => new Date().toISOString()
     }
 }, {
     timestamps: false
