@@ -11,6 +11,11 @@ app.use(express.urlencoded({ extended: true }));
 
 registerRouter(app);
 
+app.all('*', (request, response) => {
+  response.status(404).json();
+  return;
+});
+
 app.use(checkSyntaxError);
 
 const PORT = process.env.SERVER_PORT || 3000;

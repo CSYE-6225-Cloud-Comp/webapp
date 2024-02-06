@@ -29,3 +29,9 @@ export const setMethodNotAllowed = async (request, response) => {
     response.status(405).header('Cache-Control', 'no-cache').json();
     return;
 }
+
+// Method to check for 404 error
+export const notFound = async (request, response) => {
+    response.status(404).header('Cache-Control', 'no-cache').json();
+    return;
+}

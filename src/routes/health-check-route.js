@@ -5,14 +5,10 @@ const router = express.Router();
 
 console.log("Inside health-check-route.js");
 
-
 router.route("/healthz")
     .get(Healthcontroller.getHealthStatus)
     .head(Healthcontroller.setMethodNotAllowed)
     .all(Healthcontroller.setMethodNotAllowed);
-
-
-
 
 
 export default router;
