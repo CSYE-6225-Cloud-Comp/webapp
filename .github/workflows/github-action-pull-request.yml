@@ -1,5 +1,4 @@
 name: learn-github-actions
-run-name: Node JS CI
 on: [pull_request]
 jobs:
   check-bats-version:
