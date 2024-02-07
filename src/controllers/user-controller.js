@@ -65,6 +65,7 @@ export const createUser = async(request, response) => {
     
 }
 
+// Get a user
 export const getUser = async(request, response) => {
     // Check if request body and parameters are empty
     if(request.headers['content-length'] !== undefined || Object.keys(request.query).length) {
