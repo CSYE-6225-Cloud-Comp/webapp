@@ -36,7 +36,8 @@ const autheticateUser = async (request, response, next) => {
         console.log("User: ", user);
 
         console.log("Value: ", await bcrypt.compare(password, user.password));
-
+        
+        // Compare password
         const comparePassword = await bcrypt.compare(password, user.password);
 
         if(!user || !comparePassword) {
