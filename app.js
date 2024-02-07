@@ -11,6 +11,7 @@ app.use(express.urlencoded({ extended: true }));
 
 registerRouter(app);
 
+// Return 404 if path not found
 app.all('*', (request, response) => {
   response.status(404).json();
   return;
