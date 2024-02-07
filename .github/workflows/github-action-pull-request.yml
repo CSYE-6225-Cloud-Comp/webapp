@@ -10,4 +10,4 @@ jobs:
         with:
           node-version: '18.x'
       - run: npm install
-      - run: echo "Hello, world!"
+      - run: echo "npm install command executed successfully"
