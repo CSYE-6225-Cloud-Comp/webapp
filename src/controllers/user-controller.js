@@ -7,6 +7,22 @@ export const createUser = async(request, response) => {
     // Check request body fields. If more fields than necessary throw an error
     const allowedFields = ['first_name', 'last_name', 'password', 'username'];
 
+    // Check if authentication disabled
+    const authenticationHeader = request.headers.authorization;
+    console.log("Authentication Header: ", authenticationHeader);
+    if(authenticationHeader !== undefined) {
+        response.status(400).header('Cache-Control', 'no-cache').json();
+        return;
+    }
+
+    // Check if request body missing
+    console.log("Content Length: ", typeof(request.headers['content-length']));
+    if(request.headers['content-length'] == 0 || Object.keys(request.query).length) {
+        console.log("Request body missing");
+        response.status(400).header('Cache-Control', 'no-cache').json();
+        return;
+    }
+
     // Check is the fields in the request body are the fields that we need
     for (const field of Object.keys(request.body)) {
         if (!allowedFields.includes(field)) {
@@ -16,8 +32,21 @@ export const createUser = async(request, response) => {
     }
 
     // Throw an error if user already exists
-    if(isExistingUser !== null) {
-        console.log("Inside isExistingUser");
+    try {
+        const isExistingUser = await UserService.isExistingUser(request.body.username);
+
+        if(isExistingUser !== null) {
+            console.log("Inside isExistingUser");
+            response.status(400).header('Cache-Control', 'no-cache').json();
+            return;
+        }
+    } catch (error) {
+        response.status(400).header('Cache-Control', 'no-cache').json();
+        return;
+    }
+
+    // Check is the password is empty
+    if(request.body.password === "" || typeof(request.body.password) !== 'string' ) {
         response.status(400).header('Cache-Control', 'no-cache').json();
         return;
     }
@@ -44,7 +73,7 @@ export const getUser = async(request, response) => {
         return;
     }
 
-    // Get user
+    // Authenticate User
     const authenticationHeader = request.headers.authorization;
     if(!authenticationHeader) {
         response.status(401).header('Cache-Control', 'no-cache').json();
@@ -66,12 +95,19 @@ export const getUser = async(request, response) => {
     console.log("User Credentials: ", username, password);
 
     try {
+        // Fecth user from database by username
         const user = await User.findOne({
             where: { username: username }
         });
 
+        const userAccountCreatedDate = new Date(user.account_created.getTime() - 5 * 60 * 60 * 1000);
+        const userAccountUpdatedDate = new Date(user.account_updated.getTime() - 5 * 60 * 60 * 1000);
+        console.log("User Account Created Date: ", userAccountCreatedDate);
+        // Check if user entered password and the password stored in the database is the same
         const comparePassword = await bcrypt.compare(password, user.password);
 
+
+        // Throw an error is the password does not match
         if (!user || !comparePassword) {
             response.status(401).header('Cache-Control', 'no-cache').json();
             return;
@@ -82,8 +118,8 @@ export const getUser = async(request, response) => {
                 username: user.username,
                 first_name: user.first_name,
                 last_name: user.last_name,
-                account_created: user.account_created,
-                account_updated: user.account_updated
+                account_created: userAccountCreatedDate,
+                account_updated: userAccountUpdatedDate
             });
             return;
         }
@@ -99,6 +135,7 @@ export const updateUser = async(request, response) => {
     const userDetails = request.body;
     console.log("User Details: ", userDetails);
 
+    // Autheticate User
     const authenticationHeader = request.headers.authorization;
     if(!authenticationHeader) {
         response.status(401).header('Cache-Control', 'no-cache').json();
@@ -120,9 +157,12 @@ export const updateUser = async(request, response) => {
     console.log("User Credentials: ", username, password);
 
     try {
+        // Fetch user from database by username
         const user = await User.findOne({
             where: { username: username }
         })
+
+        // Check if user entered password and the password stored in the database is the same
         const comparePassword = await bcrypt.compare(password, user.password);
 
         if(!user || !comparePassword) {
@@ -132,25 +172,51 @@ export const updateUser = async(request, response) => {
 
         console.log("User: ", user);
 
+        // Check if request body is missing
+        if(request.headers['content-length'] == 0 || Object.keys(request.query).length) {
+            console.log("Request body missing");
+            response.status(400).header('Cache-Control', 'no-cache').json();
+            return;
+        }
+
+        // Check if the user given by user is same as user in the database
         if(userDetails.username !== user.username) {
             console.log("Username cannot be updated.")
             response.status(400).header('Cache-Control', 'no-cache').json();
             return;
         }
 
-        const updatedUser = await User.update({
-            id: user.id,
-            username: user.username,
-            first_name: userDetails.first_name,
-            last_name: userDetails.last_name,
-            password: userDetails.password,
-            account_created: user.account_created,
-            account_updated: new Date()
-        }, {
-            where: { username: username }
-        })
+        // Check is there are more parameters than necessary in the request body
+        const allowedFields = ['first_name', 'last_name', 'password', 'username'];
 
-        console.log("Updated User: ", updatedUser);
+        for (const field of Object.keys(request.body)) {
+            if (!allowedFields.includes(field)) {
+                response.status(400).header('Cache-Control', 'no-cache').json();
+                return;
+            }
+        }
+
+        // Update user details
+        try {
+            const updatedUser = await User.update({
+                id: user.id,
+                username: user.username,
+                first_name: userDetails.first_name,
+                last_name: userDetails.last_name,
+                password: userDetails.password,
+                account_created: user.account_created,
+                account_updated: new Date()
+            }, {
+                where: { username: username }
+            })
+
+            console.log("Updated User: ", updatedUser);
+
+        } catch(error) {
+            console.log("Error here: ", error);
+            response.status(400).header('Cache-Control', 'no-cache').json();
+            return;
+        }
 
         response.status(200).header('Cache-Control', 'no-cache').json();
     } catch(error) {
