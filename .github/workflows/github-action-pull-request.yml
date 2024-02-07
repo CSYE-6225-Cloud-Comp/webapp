@@ -4,8 +4,6 @@ name: Trigger a workflow on pull request from forked repositories feature branch
 # Trigger for the workflow. In this case, the workflow will be triggered on pull request to the main branch of the repository.
 on:
   pull_request:
-    branches: 
-        - main
 
 # Jobs that will be executed as part of the workflow
 jobs:
