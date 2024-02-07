@@ -1,26 +1,13 @@
-# Name of the workflow (Optional)
-name: Trigger a workflow on pull request from forked repositories feature branch to organization's main repository
-
-# Trigger for the workflow. In this case, the workflow will be triggered on pull request to the main branch of the repository.
-on:
-  pull_request:
-
-# Jobs that will be executed as part of the workflow
+name: learn-github-actions
+run-name: ${{ github.actor }} is learning GitHub Actions
+on: [pull_request]
 jobs:
-    build:
-
-        runs-on: ubuntu-latest
-
-        steps:
-          - uses: actions/checkout@v4
-          - name: Setup Node.js
-            uses: actions/set-up@v3
-            with: 
-                node-version: '18.x'
-          
-          - name: Install dependencies
-            run: npm ci
-          
-         
-
-    
+  check-bats-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+      - run: npm install
+      - run: echo "Hello, world!"
