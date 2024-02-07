@@ -14,7 +14,7 @@ const User = sequelize.define('user', {
         allowNull: false,
         validate: {
             notEmpty: true,
-            is: /^[a-z]+$/i,
+            is: /^[a-z\s]+$/i,
         }
     },
     last_name: {
@@ -22,7 +22,7 @@ const User = sequelize.define('user', {
         allowNull: false,
         validate: {
             notEmpty: true,
-            is: /^[a-z]+$/i,
+            is: /^[a-z\s]+$/i,
         }
     },
     password: {
@@ -62,6 +62,8 @@ const User = sequelize.define('user', {
     timestamps: false
 });
 
-sequelize.sync();
+sequelize.sync({
+    alter: true
+});
 
 export default User;
