@@ -10,6 +10,8 @@ jobs:
           container port: 3307
           mysql version: '8.0'
           mysql database: 'mydb'
+          mysql user: 'tanmay'
+          mysql password: ${{ secrets.UserPassword }}
           mysql root password: ${{ secrets.RootPassword }}
       - run: npm test
       - run: echo "Integration tests passed successfully!"
