@@ -13,6 +13,14 @@ jobs:
           mysql user: 'tanmay'
           mysql password: ${{ secrets.UserPassword }}
           mysql root password: ${{ secrets.RootPassword }}
+        env:
+          DB_DIALECT: 'mysql'
+          DB_HOST: 'localhost'
+          DB_PORT: '3306' 
+          DB_USER: 'tanmay'
+          DB_PASSWORD: ${{ secrets.MySQL_PASSWORD }}
+          DB_SCHEMA: 'mydb'
+          DB_TIMEZONE: '-05:00'
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
         with:
