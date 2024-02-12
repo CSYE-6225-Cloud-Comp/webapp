@@ -12,6 +12,7 @@ jobs:
       DB_DIALECT: ${{ secrets.ENV_VARIABLES.DB_DIALECT }}
       DB_TIMEZONE: ${{ secrets.ENV_VARIABLES.DB_TIMEZONE }}
     steps:
+      - run: echo "DB_HOST:, DB_PORT:, DB_USER:, DB_PASSWORD:, DB_SCHEMA:, DB_DIALECT:, DB_TIMEZONE:"
       - name: Set up MySQL
         run: |
          sudo /lib/systemd/systemd-sysv-install enable mysql
