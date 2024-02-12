@@ -13,15 +13,7 @@ jobs:
           mysql user: 'tanmay'
           mysql password: ${{ secrets.UserPassword }}
           mysql root password: ${{ secrets.RootPassword }}
-      - uses: SpicyPizza/create-envfile@v2.0
-        with:
-          DB_DIALECT: 'mysql'
-          DB_HOST: 'localhost'
-          DB_PORT: '3306' 
-          DB_USER: 'tanmay'
-          DB_PASSWORD: ${{ secrets.RootPassword }}
-          DB_SCHEMA: 'mydb'
-          DB_TIMEZONE: '-05:00'
+      - run: echo "${{secrets.ENV_VARIABLES }}" > .env
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
         with:
