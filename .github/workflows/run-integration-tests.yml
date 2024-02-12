@@ -13,6 +13,10 @@ jobs:
           mysql user: 'tanmay'
           mysql password: ${{ secrets.UserPassword }}
           mysql root password: ${{ secrets.RootPassword }}
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
       - run: npm test
       - run: echo "Integration tests passed successfully!"
           
