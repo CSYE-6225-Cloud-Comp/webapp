@@ -3,17 +3,12 @@ on: [pull_request]
 jobs:
   install-mysql-server:
     runs-on: ubuntu-latest
+    env:
+      DB_Name: 'mydb'
     steps:
-      - uses: mirromutth/mysql-action@v1.1
-        with:
-          host port: 3306
-          container port: 3307
-          mysql version: '8.0'
-          mysql database: 'mydb'
-          mysql user: 'tanmay'
-          mysql password: ${{ secrets.UserPassword }}
-          mysql root password: ${{ secrets.RootPassword }}
-      - run: echo "${{ secrets.ENV_VARIABLES }}" > .env
+      - name: Set up MySQL
+        run: |
+          sudo mysql -u root -e "CREATE DATABASE $DB_Name;"
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
         with:
