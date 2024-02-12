@@ -4,13 +4,13 @@ jobs:
   install-mysql-server:
     runs-on: ubuntu-latest
     env:
-      DB_HOST: 127.0.0.1
-      DB_PORT: 3306
-      DB_USER: root
-      DB_PASSWORD: root
-      DB_SCHEMA: mydb
-      DB_DIALECT: mysql
-      DB_TIMEZONE: -05:00
+      DB_HOST: ${{ secrets.ENV_VARIABLES.DB_HOST }}
+      DB_PORT: ${{ secrets.ENV_VARIABLES.DB_PORT }}
+      DB_USER: ${{ secrets.ENV_VARIABLES.DB_USER }}
+      DB_PASSWORD: ${{ secrets.ENV_VARIABLES.DB_PASSWORD }}
+      DB_SCHEMA: ${{ secrets.ENV_VARIABLES.DB_SCHEMA }}
+      DB_DIALECT: ${{ secrets.ENV_VARIABLES.DB_DIALECT }}
+      DB_TIMEZONE: ${{ secrets.ENV_VARIABLES.DB_TIMEZONE }}
     steps:
       - name: Set up MySQL
         run: |
@@ -18,7 +18,7 @@ jobs:
          sudo systemctl enable mysql.service
          sudo systemctl start mysql.service
          sudo systemctl status mysql.service
-         sudo mysql --user=root --password=root -e "CREATE DATABASE mydb"
+         sudo mysql --user=$DB_USER --password=$DB_PASSWORD -e "CREATE DATABASE $DB_SCHEMA"
 
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
