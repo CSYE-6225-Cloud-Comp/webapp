@@ -13,7 +13,7 @@ jobs:
           mysql user: 'tanmay'
           mysql password: ${{ secrets.UserPassword }}
           mysql root password: ${{ secrets.RootPassword }}
-      - run: echo "${{secrets.ENV_VARIABLES }}" > .env
+      - run: echo "${{ secrets.ENV_VARIABLES }}" > .env
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
         with:
