@@ -55,7 +55,14 @@ export const createUser = async(request, response) => {
     try {
         const user = await UserService.createUser(request.body);
         console.log("User: ", user);
-        response.status(200).header('Cache-Control', 'no-cache').json();
+        response.status(201).header('Cache-Control', 'no-cache').json({
+            id: user.id,
+            username: user.username,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            account_created: user.account_created,
+            account_updated: user.account_updated
+        });
         return;
     } catch (error) {
         console.log("Error: ", error);
@@ -152,6 +159,8 @@ export const updateUser = async(request, response) => {
 
     const userCredentials = Buffer.from(auth[1], 'base64').toString('utf-8').split(':');
 
+    console.log("User Credentials: ", userCredentials);
+
     const username = userCredentials[0];
     const password = userCredentials[1];
 
@@ -180,15 +189,8 @@ export const updateUser = async(request, response) => {
             return;
         }
 
-        // Check if the user given by user is same as user in the database
-        if(userDetails.username !== user.username) {
-            console.log("Username cannot be updated.")
-            response.status(400).header('Cache-Control', 'no-cache').json();
-            return;
-        }
-
         // Check is there are more parameters than necessary in the request body
-        const allowedFields = ['first_name', 'last_name', 'password', 'username'];
+        const allowedFields = ['first_name', 'last_name', 'password'];
 
         for (const field of Object.keys(request.body)) {
             if (!allowedFields.includes(field)) {
@@ -219,7 +221,7 @@ export const updateUser = async(request, response) => {
             return;
         }
 
-        response.status(200).header('Cache-Control', 'no-cache').json();
+        response.status(204).header('Cache-Control', 'no-cache').json();
     } catch(error) {
         response.status(400).header('Cache-Control', 'no-cache').json();
         return;

@@ -1,0 +1,17 @@
+name: Run Integration Tests
+on: [pull_request]
+jobs:
+  install-mysql-server:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: mirromutth/mysql-action@v1.1
+        with:
+          host port: 3306
+          container port: 3307
+          mysql version: '8.0'
+          mysql database: 'mydb'
+          mysql root password: ${{ secrets.RootPassword }}
+      - run: npm test
+      - run: echo "Integration tests passed successfully!"
+          
+      
