@@ -1,7 +1,7 @@
 name: Run Integration Tests
 on: [pull_request]
 jobs:
-  install-mysql-server:
+  run-integration-tests:
     runs-on: ubuntu-latest
     env:
       DB_HOST: ${{ vars.DB_HOST }}
@@ -12,7 +12,6 @@ jobs:
       DB_DIALECT: ${{ vars.DB_DIALECT }}
       DB_TIMEZONE: ${{ vars.DB_TIMEZONE }}
     steps:
-      - run: echo "$DB_HOST:, $DB_PORT:, $DB_USER:, $DB_PASSWORD:, $DB_SCHEMA:, $DB_DIALECT:, $DB_TIMEZONE:"
       - name: Set up MySQL
         run: |
          sudo /lib/systemd/systemd-sysv-install enable mysql
