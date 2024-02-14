@@ -3,10 +3,12 @@ import app from "../app.js";
 import sequelize from "../src/models/db.js";
 
 describe("Account Creation and Updation", () => {
+    // Sync the database before running the tests
     beforeAll(async () => {
         await sequelize.sync();
     });
 
+    // Create a new account and validate the account
     test("It should create a new account and validate the account", async () => {
         const postResponse = await request(app).post("/v1/user")
             .send({
@@ -31,6 +33,7 @@ describe("Account Creation and Updation", () => {
         expect(getResponse.body.last_name).toEqual(postResponse.body.last_name);
     });
 
+    // Update an account and validate the account
     test('It should update an account and validate the account', async () => {
         
         const encodedCredentials = Buffer.from("johndoe@example.com:password").toString('base64');
