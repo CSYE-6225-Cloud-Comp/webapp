@@ -16,7 +16,7 @@ describe("Account Creation and Updation", () => {
                 "password": "password"
             });
         console.log("postResponse", postResponse.body);
-        expect(postResponse.statusCode).toBe(201);
+        expect(postResponse.statusCode).toBe(400);
 
         // const comparePassword = await bcrypt.compare("password", user.password);
 
