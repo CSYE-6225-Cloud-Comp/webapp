@@ -19,8 +19,5 @@ app.all('*', (request, response) => {
 
 app.use(checkSyntaxError);
 
-const PORT = process.env.SERVER_PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Cloud native app listening on port ${PORT}!`);
-});
+export default app;
 

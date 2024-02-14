@@ -1,4 +1,4 @@
-name: learn-github-actions
+name: Install NPM Packages
 on: [pull_request]
 jobs:
   install-npm-packages:
