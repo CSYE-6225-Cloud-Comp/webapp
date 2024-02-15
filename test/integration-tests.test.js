@@ -19,6 +19,7 @@ describe("Account Creation and Updation", () => {
             });
         console.log("postResponse", postResponse.body);
         expect(postResponse.statusCode).toBe(201);
+        expect(postResponse.headers).toMatchObject({ 'cache-control': 'no-cache' });
 
         // const comparePassword = await bcrypt.compare("password", user.password);
 
@@ -31,6 +32,7 @@ describe("Account Creation and Updation", () => {
         expect(getResponse.body.username).toEqual(postResponse.body.username);
         expect(getResponse.body.first_name).toEqual(postResponse.body.first_name);
         expect(getResponse.body.last_name).toEqual(postResponse.body.last_name);
+        expect(getResponse.headers).toMatchObject({ 'cache-control': 'no-cache' });
     });
 
     // Update an account and validate the account
@@ -45,13 +47,17 @@ describe("Account Creation and Updation", () => {
                 'password': 'password1',
             });
         expect(putResponse.statusCode).toBe(204);
+        expect(putResponse.headers).toMatchObject({ 'cache-control': 'no-cache' });
+        expect(putResponse.body).toEqual({});
 
         const updatedEncodedCredentials = Buffer.from("johndoe@example.com:password1").toString('base64');
         const getResponse = await request(app).get("/v1/user/self")
                                 .set("Authorization", `Basic ${updatedEncodedCredentials}`)
         expect(getResponse.statusCode).toBe(200);
         expect(getResponse.body.username).toEqual("johndoe@example.com");
-
+        expect(getResponse.body.first_name).toEqual("Johnnny");
+        expect(getResponse.body.last_name).toEqual("Doe");
+        expect(getResponse.headers).toMatchObject({ 'cache-control': 'no-cache' });
     });
 });
 
