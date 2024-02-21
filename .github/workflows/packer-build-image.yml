@@ -16,7 +16,21 @@ jobs:
             DB_DIALECT: ${{ vars.DB_DIALECT }}
             DB_TIMEZONE: ${{ vars.DB_TIMEZONE }}  
             GITHUB_WORKSPACE: ${{ github.workspace }}
+            PRODUCT_VERSION: "latest"
+            GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+            SERVER_PORT: ${{ vars.SERVER_PORT }}
         steps:
+            - id: 'auth'
+              uses: 'google-github-actions/auth@v2'
+              with:
+                credentials_json: ${{ env.GCP_CREDENTIALS }}
+    
+            - name: 'Set up Cloud SDK'
+              uses: 'google-github-actions/setup-gcloud@v2'
+    
+            - name: 'Use gcloud CLI'
+              run: 'gcloud info'
+            
             - name: Setup MYSQL
               run: |
                 sudo /lib/systemd/systemd-sysv-install enable mysql
@@ -24,21 +38,46 @@ jobs:
                 sudo systemctl start mysql.service
                 sudo systemctl status mysql.service
                 sudo mysql --user=$DB_USER --password=$DB_PASSWORD -e "CREATE DATABASE $DB_SCHEMA"
+
             - name: Checkout
               uses: actions/checkout@v4
+
+            - name: Create .env file
+              run: |
+                touch $GITHUB_WORKSPACE/.env
+                echo "DB_HOST=$DB_HOST" >> .env
+                echo "DB_PORT=$DB_PORT" >> .env
+                echo "DB_USER=$DB_USER" >> .env
+                echo "DB_PASSWORD=$DB_PASSWORD" >> .env
+                echo "DB_SCHEMA=$DB_SCHEMA" >> .env
+                echo "DB_DIALECT=$DB_DIALECT" >> .env
+                echo "DB_TIMEZONE=$DB_TIMEZONE" >> .env
+                echo "GCP_CREDENTIALS=$GCP_CREDENTIALS" >> .env
+                echo "SERVER_PORT=$SERVER_PORT" >> .env
+                cat .env
+
+            - name: Zip Repository
+              run: zip -r webapp.zip .
+               .
             - name: Set up Node.js
               uses: actions/setup-node@v3
               with:
                 node-version: '18.x'
+
             - name: Install Dependencies
               run: npm install
+
             - name: Run Integration Tests
               run: npm test 
-            - name: Zip Repository
-              run: zip -r repo.zip repo
-            - name: Set up Packer
-              uses: hashicorp/setup-packer@v1
+
+            - name: Setup `packer`
+              uses: hashicorp/setup-packer@main
+              id: setup
               with:
-                  version: 1.1.1
+                version: ${{ env.PRODUCT_VERSION }}
+              
+            - name: Initialize Packer
+              run: packer init $GITHUB_WORKSPACE/packer/centos.pkr.hcl
+
             - name: Build Packer Template
               run: packer build $GITHUB_WORKSPACE/packer/centos.pkr.hcl
