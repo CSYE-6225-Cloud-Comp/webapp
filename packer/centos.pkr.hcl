@@ -19,7 +19,6 @@ packer {
 
 # Build a custom image using Packer
 source "googlecompute" "gcp-custom-image" {
-  credentials_file    = "C:\\Users\\Dell\\Downloads\\tf-gcp-infra-70afc776d951.json"
   project_id          = "tf-gcp-infra"
   source_image        = "centos-stream-8-v20240110"
   source_image_family = "centos-stream-8"
