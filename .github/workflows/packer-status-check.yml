@@ -17,5 +17,6 @@ jobs:
             - name: Status Check for packer template
               run: |
                 echo "Github workspace: $GITHUB_WORKSPACE"
-                packer fmt -check .
+                packer init $GITHUB_WORKSPACE/packer/centos.pkr.hcl
+                packer fmt -check $GITHUB_WORKSPACE/packer/centos.pkr.hcl
                 packer validate $GITHUB_WORKSPACE/packer/centos.pkr.hcl
