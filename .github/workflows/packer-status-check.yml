@@ -16,6 +16,6 @@ jobs:
                 version: ${{ env.PRODUCT_VERSION }}
             - name: Status Check for packer template
               run: |
-                echo $GITHUB_WORKSPACE
-                packer fmt $GITHUB_WORKSPACE/packer/centos.pkr.hcl --check
-                packer validate $GITHUB_WORKSPACE/packer/centos.pkr.hcl
+                echo "Github workspace: $GITHUB_WORKSPACE"
+                packer fmt ./packer/centos.pkr.hcl
+                packer validate ./packer/centos.pkr.hcl
