@@ -3,7 +3,7 @@ variable "gcp_zone" {
   default = "us-west1-a"
 }
 
-varibale "ssh_username" {
+variable "ssh_username" {
   type    = string
   default = "centos"
 }
