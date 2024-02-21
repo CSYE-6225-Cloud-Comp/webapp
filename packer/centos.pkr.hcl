@@ -35,7 +35,7 @@ build {
   # Provisioner 1 - Create a local user csye6225 with primary group csye6225. User should not have a login shell
   provisioner "shell" {
     # Path to the shell script
-    script = "./scripts/create-user-and-group.sh"
+    script = "packer/scripts/createUser.sh"
   }
 
   # Provisioner 2 - File Provisioner - Copy files
@@ -46,12 +46,12 @@ build {
 
   # Provisioner 3 - Install Dependencies
   provisioner "shell" {
-    script = "./scripts/install-dependencies.sh"
+    script = "packer/scripts/install-dependencies.sh"
   }
 
   # Provisioner 4 - Add systemd service file to /etc/systemd/system
   provisioner "file" {
-    source      = "/webapp.service"
+    source      = "packer/webapp.service"
     destination = "/etc/systemd/system/webapp.service"
   }
 }
