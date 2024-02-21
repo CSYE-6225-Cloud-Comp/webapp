@@ -5,13 +5,15 @@ jobs:
         runs-on: ubuntu-latest
         env:
             GITHUB_WORKSPACE: ${{ github.workspace }}
+            PRODUCT_VERSION: ${{ vars.PRODUCT_VERSION }}
         steps:
             - name: Checkout repository
               uses: actions/checkout@v2
-            - name: Set up Packer
-              uses: hashicorp/setup-packer@v1
+            - name: Setup `packer`
+              uses: hashicorp/setup-packer@main
+              id: setup
               with:
-                  version: 1.7.3
+                version: $PRODUCT_VERSION
             - name: Status Check for packer template
               run: |
                 echo $GITHUB_WORKSPACE
