@@ -9,52 +9,52 @@ variable "ssh_username" {
 }
 
 variable "DBUSER" {
-  type = string
-  default="root"
+  type    = string
+  default = "root"
 }
 
 variable "DBPASSWORD" {
-  type = string
-  default="password@123"
+  type    = string
+  default = "password@123"
 }
 
 variable "DBHOST" {
-  type = string
-  default="localhost"
+  type    = string
+  default = "localhost"
 }
 
 variable "DBPORT" {
-  type = string
-  default="3306"
+  type    = string
+  default = "3306"
 }
 
 variable "DBNAME" {
-  type = string
-  default="mydb"
+  type    = string
+  default = "mydb"
 }
 
 variable "PORT" {
-  type = string
-  default="3000"
+  type    = string
+  default = "3000"
 }
 
 variable "gcp_project" {
-  type = string
+  type    = string
   default = "tf-gcp-infra"
 }
 
 variable "gcp_region" {
-  type = string
+  type    = string
   default = "us-west1"
 }
 
 variable "source_image" {
-  type = string
+  type    = string
   default = "centos-stream-8-v20240110"
 }
 
 variable "source_image_family" {
-  type = string
+  type    = string
   default = "centos-stream-8"
 }
 
