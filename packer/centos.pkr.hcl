@@ -79,7 +79,7 @@ source "googlecompute" "gcp-custom-image" {
 # Define the build
 build {
   name    = "build-gcp-custom-image"
-  sources = ["source.googlecompute.centos"]
+  sources = ["source.googlecompute.gcp-custom-image"]
 
   # Define provisioners
   # Provisioner 1 - Create a local user csye6225 with primary group csye6225. User should not have a login shell
