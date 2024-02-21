@@ -22,16 +22,18 @@ source ~/.bashrc
 nvm install v18.17.1
 
 # Unzip webapp
-cd tmp 
-unzip webapp.zip -d webapp
+sudo mv /tmp/webapp.zip /opt/
 
-# Change ownership
-sudo chown -R csye6225:csye6225 webapp
+cd opt
+unzip webapp.zip -d webapp
 
 cd webapp
 
 # NPM install
 npm install
+
+# Change ownership
+sudo chown -R csye6225:csye6225 webapp
 
 sudo cp ./packer/webapp.service /etc/systemd/system/
 sudo systemctl daemon-reload
