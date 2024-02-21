@@ -1,0 +1,21 @@
+name: Status check for packer template
+on: [pull_request]
+jobs:
+    status-check:
+        runs-on: ubuntu-latest
+        env:
+            GITHUB_WORKSPACE: ${{ github.workspace }}
+            PRODUCT_VERSION: "latest"
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
+            - name: Setup `packer`
+              uses: hashicorp/setup-packer@main
+              id: setup
+              with:
+                version: ${{ env.PRODUCT_VERSION }}
+            - name: Status Check for packer template
+              run: |
+                echo "Github workspace: $GITHUB_WORKSPACE"
+                packer fmt -check .
+                packer validate $GITHUB_WORKSPACE/packer/centos.pkr.hcl
