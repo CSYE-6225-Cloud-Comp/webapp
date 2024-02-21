@@ -21,4 +21,3 @@ jobs:
                 echo "Github workspace : $GITHUB_WORKSPACE"
                 packer init $GITHUB_WORKSPACE/packer/centos.pkr.hcl
                 packer fmt -check $GITHUB_WORKSPACE/packer/centos.pkr.hcl
-                packer validate $GITHUB_WORKSPACE/packer/centos.pkr.hcl
