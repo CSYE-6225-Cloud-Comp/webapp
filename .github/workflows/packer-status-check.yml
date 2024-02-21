@@ -18,7 +18,7 @@ jobs:
                 version: ${{ env.PRODUCT_VERSION }}
             - name: Status Check for packer template
               run: |
-                echo "Github workspace: $GITHUB_WORKSPACE"
+                echo "Github workspace : $GITHUB_WORKSPACE"
                 packer init .
                 packer fmt -check .
                 packer validate .
