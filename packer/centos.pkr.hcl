@@ -101,7 +101,7 @@ build {
       "DB_PASSWORD=${var.DBPASSWORD}",
       "DB_HOST=${var.DBHOST}",
       "DB_PORT=${var.DBPORT}",
-      "DB_NAME=${var.DBNAME}"
+      "DB_NAME=${var.DBNAME}",
       "PORT=${var.PORT}"
     ]
   }
