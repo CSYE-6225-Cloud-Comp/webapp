@@ -37,7 +37,7 @@ sudo yum install unzip -y
 # Unzip webapp
 sudo mv /tmp/webapp.zip /opt/webapp.zip
 cd /opt
-unzip webapp.zip -d webapp
+sudo unzip webapp.zip -d webapp
 cd /webapp
 npm install
 # Change ownership
