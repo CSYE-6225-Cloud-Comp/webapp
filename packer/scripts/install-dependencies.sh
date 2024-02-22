@@ -12,7 +12,14 @@ sudo dnf install mysql-server -y
 sudo systemctl start mysqld.service
 sudo systemctl status mysqld
 sudo systemctl enable mysqld
-mysql -u root -e "CREATE DATABASE $DATABASE"
+sudo mysql_secure_installation << EOF
+y
+2
+$DBPASS
+$DBPASS
+y
+EOF
+mysql -u root -p $DBPASS -e "CREATE DATABASE $DATABASE;"
 
 # Install Nodejs
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
