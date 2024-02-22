@@ -22,6 +22,7 @@ nvm install v18.17.1
 sudo yum install unzip
 
 # Unzip webapp
+sudo mv /tmp/webapp.zip /opt
 cd /opt
 unzip webapp.zip -d webapp
 cd webapp
