@@ -8,37 +8,41 @@ export PORT=${PORT}
 export DBPORT=${DBPORT}
 
 
-sudo dnf install mysql-server -y
-sudo systemctl start mysqld
-sudo systemctl status mysqld
-sudo systemctl enable mysqld
+echo "DBHOST: ${DBHOST}"
+echo "DBPASSWORD: ${DBPASS}"
+echo "PORT: $PORT"
 
-mysql -u root -e "CREATE DATABASE ${DATABASE}"
-echo mysql -u root -e "SHOW DATABASES"
-mysql -u root -e "CREATE USER ${DBUSER}@'localhost' IDENTIFIED BY ${DBPASS}"
-mysql -u root -e "GRANT ALL PRIVILEGES ON ${DATABASE}.* TO ${DBUSER}@'localhost'"
-mysql -u root -e "FLUSH PRIVILEGES"
+# sudo dnf install mysql-server -y
+# sudo systemctl start mysqld
+# sudo systemctl status mysqld
+# sudo systemctl enable mysqld
 
-# Install Nodejs
-sudo dnf module install nodejs:20 -y
+# mysql -u root -e "CREATE DATABASE ${DATABASE}"
+# echo mysql -u root -e "SHOW DATABASES"
+# mysql -u root -e "CREATE USER ${DBUSER}@'localhost' IDENTIFIED BY ${DBPASS}"
+# mysql -u root -e "GRANT ALL PRIVILEGES ON ${DATABASE}.* TO ${DBUSER}@'localhost'"
+# mysql -u root -e "FLUSH PRIVILEGES"
 
-sudo yum install unzip -y
+# # Install Nodejs
+# sudo dnf module install nodejs:20 -y
 
-# Unzip webapp
-sudo mv /tmp/webapp.zip /opt/webapp.zip
-cd /opt
-sudo unzip webapp.zip -d webapp
-sleep 3
-sudo rm -rf /opt/webapp.zip
-sleep 3
-cd webapp
-sudo npm install
-sleep 10
+# sudo yum install unzip -y
 
-# Change ownership
-sudo chown -R csye6225 .
-sudo chgrp -R csye6225 .
+# # Unzip webapp
+# sudo mv /tmp/webapp.zip /opt/webapp.zip
+# cd /opt
+# sudo unzip webapp.zip -d webapp
+# sleep 3
+# sudo rm -rf /opt/webapp.zip
+# sleep 3
+# cd webapp
+# sudo npm install
+# sleep 10
 
-sudo cp ./packer/webapp.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl enable webapp
+# # Change ownership
+# sudo chown -R csye6225 .
+# sudo chgrp -R csye6225 .
+
+# sudo cp ./packer/webapp.service /etc/systemd/system/
+# sudo systemctl daemon-reload
+# sudo systemctl enable webapp
