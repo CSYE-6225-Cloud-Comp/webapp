@@ -14,6 +14,8 @@ sudo systemctl status mysqld
 sudo systemctl enable mysqld
 
 mysql -u root -e "CREATE DATABASE mydb"
+echo mysql -u root -e "SHOW DATABASES"
+
 # Get the repo RPM and install it.
 # sudo yum install wget -y
 # sudo wget http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm 
@@ -50,8 +52,8 @@ cd webapp
 sudo npm install
 sleep 10
 # Change ownership
-sudo chown -R csye6225 webapp
-sudo chgrp -R csye6225 webapp
+sudo chown -R csye6225 .
+sudo chgrp -R csye6225 .
 
 sudo cp ./packer/webapp.service /etc/systemd/system/
 sudo systemctl daemon-reload
