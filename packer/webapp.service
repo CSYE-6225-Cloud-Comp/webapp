@@ -3,12 +3,11 @@ Description=webapp
 After=network.target
 
 [Service]
-Environment=NODE_PORT=3000
 Type=simple
 User=csye6225
 Group=csye6225
 WorkingDirectory=/opt/webapp
-ExecStart=/usr/bin/node /tmp/webapp/server.js
+ExecStart=/usr/bin/node /opt/webapp/server.js
 Restart=always
 RestartSec=3
 StandardOutput=syslog

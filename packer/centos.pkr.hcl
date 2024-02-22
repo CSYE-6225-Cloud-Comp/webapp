@@ -90,7 +90,7 @@ build {
   # Provisioner 2 - File Provisioner - Copy files
   provisioner "file" {
     source      = "./webapp.zip"
-    destination = "/tmp/webapp.zip"
+    destination = "/opt/webapp.zip"
   }
 
   # Provisioner 3 - Install Dependencies
