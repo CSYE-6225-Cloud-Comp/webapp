@@ -22,16 +22,15 @@ nvm install v18.17.1
 sudo yum install unzip
 
 # Unzip webapp
-mkdir -p /opt/application
-sudo mv /tmp/webapp.zip /opt/application/webapp.zip
-cd /opt/application
+sudo mv /tmp/webapp.zip /opt/webapp.zip
+cd /opt
 unzip webapp.zip -d webapp
 cd /webapp
 npm install
 
 # Change ownership
-sudo chown -R csye6225 application
-sudo chgrp -R csye6225 application
+sudo chown -R csye6225 webapp
+sudo chgrp -R csye6225 webapp
 
 sudo cp ./packer/webapp.service /etc/systemd/system/
 sudo systemctl daemon-reload
