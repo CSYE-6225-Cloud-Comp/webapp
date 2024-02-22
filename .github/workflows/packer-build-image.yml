@@ -19,6 +19,8 @@ jobs:
             PRODUCT_VERSION: "latest"
             GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
             SERVER_PORT: ${{ vars.SERVER_PORT }}
+            VM_DB_USER: ${{ secrets.VM_DB_USER }}
+            VM_DB_PASSWORD: ${{ secrets.VM_DB_PASSWORD }}
         steps:
             - name: Checkout
               uses: actions/checkout@v4
@@ -36,8 +38,8 @@ jobs:
                 touch $GITHUB_WORKSPACE/.env
                 echo "DB_HOST=$DB_HOST" >> .env
                 echo "DB_PORT=$DB_PORT" >> .env
-                echo "DB_USER=$DB_USER" >> .env
-                echo "DB_PASSWORD=$DB_PASSWORD" >> .env
+                echo "DB_USER=$VM_DB_USER" >> .env
+                echo "DB_PASSWORD=$VM_DB_PASSWORD" >> .env
                 echo "DB_SCHEMA=$DB_SCHEMA" >> .env
                 echo "DB_DIALECT=$DB_DIALECT" >> .env
                 echo "DB_TIMEZONE=$DB_TIMEZONE" >> .env
