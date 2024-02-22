@@ -8,7 +8,7 @@ export PORT=${PORT}
 export DBPORT=${DBPORT}
 
 # Get the repo RPM and install it.
-sudo yum install wget
+sudo yum install wget -y
 sudo wget http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm 
 sudo yum -y install ./mysql57-community-release-el7-7.noarch.rpm 
 
@@ -32,7 +32,7 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
 source ~/.bashrc
 nvm install v18.17.1
 
-sudo yum install unzip
+sudo yum install unzip -y
 
 # Unzip webapp
 sudo mv /tmp/webapp.zip /opt/webapp.zip
