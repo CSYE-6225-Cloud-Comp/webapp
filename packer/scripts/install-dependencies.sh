@@ -13,19 +13,19 @@ sudo wget http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm
 sudo yum -y install ./mysql57-community-release-el7-7.noarch.rpm 
 
 # Install the server and start it
-sudo yum -y install mysql-server 
-sudo systemctl start mysqld 
+# sudo yum -y install mysql-server 
+# sudo systemctl start mysqld 
 
-# Get the temporary password
-temp_password=$(grep password /var/log/mysqld.log | awk '{print $NF}')
+# # Get the temporary password
+# temp_password=$(grep password /var/log/mysqld.log | awk '{print $NF}')
 
-# Set up a batch file with the SQL commands
-echo "ALTER USER 'root'@'localhost' IDENTIFIED BY 'password@123'; flush privileges;" > reset_pass.sql
+# # Set up a batch file with the SQL commands
+# echo "ALTER USER 'root'@'localhost' IDENTIFIED BY 'password@123'; flush privileges;" > reset_pass.sql
 
-# Log in to the server with the temporary password, and pass the SQL file to it.
-mysql -u root --password="$temp_password" --connect-expired-password < reset_pass.sql
+# # Log in to the server with the temporary password, and pass the SQL file to it.
+# mysql -u root --password="$temp_password" --connect-expired-password < reset_pass.sql
 
-mysql -u root -p password@123 -e "CREATE DATABASE $DATABASE;"
+# mysql -u root -p password@123 -e "CREATE DATABASE $DATABASE;"
 
 # Install Nodejs
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
@@ -42,7 +42,7 @@ sleep 3
 sudo rm -rf /opt/webapp.zip
 sleep 3
 cd webapp
-npm install
+sudo npm install
 sleep 10
 # Change ownership
 sudo chown -R csye6225 webapp
