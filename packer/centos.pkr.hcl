@@ -10,7 +10,7 @@ variable "ssh_username" {
 
 variable "DBUSER" {
   type    = string
-  default = "root"
+  default = "tanmay"
 }
 
 variable "DBPASSWORD" {
