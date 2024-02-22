@@ -99,7 +99,7 @@ build {
     environment_vars = [
       "DB_USER=${var.DBUSER}",
       "DB_PASSWORD=${var.DBPASSWORD}",
-      "DB_HOST=${var.DBHOST}",
+      "DB_HOST=var.DBHOST",
       "DB_PORT=${var.DBPORT}",
       "DB_NAME=${var.DBNAME}",
       "PORT=${var.PORT}"
