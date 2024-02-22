@@ -8,7 +8,7 @@ export PORT=${PORT}
 export DBPORT=${DBPORT}
 
 
-sudo dnf install mysql server -y
+sudo dnf install mysql-server -y
 sudo systemctl start mysqld
 sudo systemctl status mysqld
 sudo systemctl enable mysqld
