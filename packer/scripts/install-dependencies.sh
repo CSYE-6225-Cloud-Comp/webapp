@@ -38,8 +38,10 @@ sudo yum install unzip -y
 sudo mv /tmp/webapp.zip /opt/webapp.zip
 cd /opt
 sudo unzip webapp.zip -d webapp
-sleep 10
-cd /webapp
+sleep 3
+sudo rm -rf /opt/webapp.zip
+sleep 3
+cd webapp
 npm install
 sleep 10
 # Change ownership
