@@ -14,27 +14,9 @@ sudo systemctl status mysqld
 sudo systemctl enable mysqld
 
 mysql -u root -e "CREATE DATABASE mydb"
-echo mysql -u root -e "SHOW DATABASES"
-
-# Get the repo RPM and install it.
-# sudo yum install wget -y
-# sudo wget http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm 
-# sudo yum -y install ./mysql57-community-release-el7-7.noarch.rpm 
-
-# Install the server and start it
-# sudo yum -y install mysql-server 
-# sudo systemctl start mysqld 
-
-# # Get the temporary password
-# temp_password=$(grep password /var/log/mysqld.log | awk '{print $NF}')
-
-# # Set up a batch file with the SQL commands
-# echo "ALTER USER 'root'@'localhost' IDENTIFIED BY 'password@123'; flush privileges;" > reset_pass.sql
-
-# # Log in to the server with the temporary password, and pass the SQL file to it.
-# mysql -u root --password="$temp_password" --connect-expired-password < reset_pass.sql
-
-# mysql -u root -p password@123 -e "CREATE DATABASE $DATABASE;"
+mysql -u root -e "CREATE USER 'tanmay' IDENTIFIED BY 'password@123'"
+mysql -u root -e "GRANT ALL PRIVILEGES ON mydb.* TO 'tanmay'@'localhost'"
+mysql -u root -e "FLUSH PRIVILEGES"
 
 # Install Nodejs
 sudo dnf module install nodejs:20 -y
@@ -50,7 +32,7 @@ sudo rm -rf /opt/webapp.zip
 sleep 3
 cd webapp
 sudo npm install
-sleep 10
+sleep 3
 # Change ownership
 sudo chown -R csye6225 .
 sudo chgrp -R csye6225 .
