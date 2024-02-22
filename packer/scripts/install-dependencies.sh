@@ -34,9 +34,10 @@ nvm install v18.17.1
 sudo yum install unzip
 
 # Unzip webapp
-unzip webapp.zip -d webapp
-sudo mv /tmp/webapp /opt/webapp
-cd /opt/webapp
+sudo mv /tmp/webapp.zip /opt/webapp.zip
+cd /opt
+sudo unzip webapp.zip -d webapp
+cd /webapp
 npm install
 # Change ownership
 sudo chown -R csye6225 webapp
