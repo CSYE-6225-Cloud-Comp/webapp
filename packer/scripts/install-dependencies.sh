@@ -13,7 +13,7 @@ sudo wget http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm
 sudo yum -y install ./mysql57-community-release-el7-7.noarch.rpm 
 
 # Install the server and start it
-sudo yum -y install mysql-community-server 
+sudo yum -y install mysql-server 
 sudo systemctl start mysqld 
 
 # Get the temporary password
@@ -38,8 +38,10 @@ sudo yum install unzip -y
 sudo mv /tmp/webapp.zip /opt/webapp.zip
 cd /opt
 sudo unzip webapp.zip -d webapp
+sleep 10
 cd /webapp
 npm install
+sleep 10
 # Change ownership
 sudo chown -R csye6225 webapp
 sudo chgrp -R csye6225 webapp
