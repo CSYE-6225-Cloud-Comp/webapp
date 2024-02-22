@@ -15,7 +15,7 @@ sudo systemctl enable mysqld
 
 mysql -u root -e "CREATE DATABASE mydb"
 echo mysql -u root -e "SHOW DATABASES"
-mysql -u root -e "CREATE USER 'tanmay'@'localhost' IDENTIFIED BY 'password'"
+mysql -u root -e "CREATE USER 'tanmay'@'localhost' IDENTIFIED BY 'password@123'"
 mysql -u root -e "GRANT ALL PRIVILEGES ON mydb.* TO 'tanmay'@'localhost'"
 mysql -u root -e "FLUSH PRIVILEGES"
 
