@@ -28,9 +28,7 @@ sudo yum -y install ./mysql57-community-release-el7-7.noarch.rpm
 # mysql -u root -p password@123 -e "CREATE DATABASE $DATABASE;"
 
 # Install Nodejs
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
-source ~/.bashrc
-nvm install v18.17.1
+sudo dnf module install nodejs:20 -y
 
 sudo yum install unzip -y
 
