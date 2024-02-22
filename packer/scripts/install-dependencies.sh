@@ -7,10 +7,17 @@ export DATABASE=${DATABASE}
 export PORT=${PORT}
 export DBPORT=${DBPORT}
 
+
+sudo dnf install mysql server -y
+sudo systemctl start mysqld
+sudo systemctl status mysqld
+sudo systemctl enable mysqld
+
+mysql -u root -e "CREATE DATABASE mydb"
 # Get the repo RPM and install it.
-sudo yum install wget -y
-sudo wget http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm 
-sudo yum -y install ./mysql57-community-release-el7-7.noarch.rpm 
+# sudo yum install wget -y
+# sudo wget http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm 
+# sudo yum -y install ./mysql57-community-release-el7-7.noarch.rpm 
 
 # Install the server and start it
 # sudo yum -y install mysql-server 
