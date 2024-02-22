@@ -13,10 +13,10 @@ sudo systemctl start mysqld
 sudo systemctl status mysqld
 sudo systemctl enable mysqld
 
-mysql -u root -e "CREATE DATABASE $DATABASE"
+mysql -u root -e "CREATE DATABASE mydb"
 echo mysql -u root -e "SHOW DATABASES"
-mysql -u root -e "CREATE USER $DBUSER@'localhost' IDENTIFIED BY $DBPASS"
-mysql -u root -e "GRANT ALL PRIVILEGES ON $DATABASE.* TO $DBUSER@'localhost'"
+mysql -u root -e "CREATE USER 'tanmay'@'localhost' IDENTIFIED BY 'password@123'"
+mysql -u root -e "GRANT ALL PRIVILEGES ON mydb.* TO 'tanmay'@'localhost'"
 mysql -u root -e "FLUSH PRIVILEGES"
 
 # Install Nodejs
