@@ -1,6 +1,6 @@
 variable "gcp_zone" {
   type    = string
-  default = "us-west1-a"
+  default = "us-east1-b"
 }
 
 variable "ssh_username" {
