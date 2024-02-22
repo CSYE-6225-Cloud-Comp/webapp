@@ -8,12 +8,13 @@ export PORT=${PORT}
 export DBPORT=${DBPORT}
 
 # Get the repo RPM and install it.
-wget http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm 
-yum -y install ./mysql57-community-release-el7-7.noarch.rpm 
+sudo yum install wget
+sudo wget http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm 
+sudo yum -y install ./mysql57-community-release-el7-7.noarch.rpm 
 
 # Install the server and start it
-yum -y install mysql-community-server 
-systemctl start mysqld 
+sudo yum -y install mysql-community-server 
+sudo systemctl start mysqld 
 
 # Get the temporary password
 temp_password=$(grep password /var/log/mysqld.log | awk '{print $NF}')
@@ -36,7 +37,7 @@ sudo yum install unzip
 # Unzip webapp
 sudo mv /tmp/webapp.zip /opt/webapp.zip
 cd /opt
-sudo unzip webapp.zip -d webapp
+unzip webapp.zip -d webapp
 cd /webapp
 npm install
 # Change ownership
