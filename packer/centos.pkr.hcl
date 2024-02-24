@@ -48,7 +48,7 @@ variable "gcp_region" {
   default = "us-west1"
 }
 
-variable "source_image" {
+variable "source_image"   {
   type    = string
   default = "centos-stream-8-v20240110"
 }
