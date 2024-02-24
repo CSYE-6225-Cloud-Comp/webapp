@@ -89,7 +89,7 @@ build {
 
   # Provisioner 2 - File Provisioner - Copy files
   provisioner "file" {
-    source = "./webapp.zip"
+    source      = "./webapp.zip"
     destination = "/tmp/webapp.zip"
   }
 
