@@ -87,6 +87,10 @@ build {
     script = "packer/scripts/createUser.sh"
   }
 
+  provisioner "shell" {
+    script = "packer/scripts/install-nginx.sh"
+  }
+
   # Provisioner 2 - File Provisioner - Copy files
   provisioner "file" {
     source      = "./webapp.zip"
