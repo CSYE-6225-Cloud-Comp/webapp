@@ -71,7 +71,7 @@ packer {
 source "googlecompute" "gcp-custom-image" {
   project_id          = var.gcp_project
   source_image        = var.source_image
-  source_image_family = var.source_image_family
+  source_image_family = var.source_image_famil
   zone                = var.gcp_zone
   ssh_username        = var.ssh_username
 }
