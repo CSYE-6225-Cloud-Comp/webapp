@@ -33,19 +33,19 @@ jobs:
                 sudo systemctl status mysql.service
                 sudo mysql --user=$DB_USER --password=$DB_PASSWORD -e "CREATE DATABASE $DB_SCHEMA"
 
-            - name: Create .env file
-              run: |
-                touch $GITHUB_WORKSPACE/.env
-                echo "DB_HOST=$DB_HOST" >> .env
-                echo "DB_PORT=$DB_PORT" >> .env
-                echo "DB_USER=$VM_DB_USER" >> .env
-                echo "DB_PASSWORD=$VM_DB_PASSWORD" >> .env
-                echo "DB_SCHEMA=$DB_SCHEMA" >> .env
-                echo "DB_DIALECT=$DB_DIALECT" >> .env
-                echo "DB_TIMEZONE=$DB_TIMEZONE" >> .env
-                echo "GCP_CREDENTIALS=$GCP_CREDENTIALS" >> .env
-                echo "SERVER_PORT=$SERVER_PORT" >> .env
-                cat .env
+            # - name: Create .env file
+            #   run: |
+            #     touch $GITHUB_WORKSPACE/.env
+            #     echo "DB_HOST=$DB_HOST" >> .env
+            #     echo "DB_PORT=$DB_PORT" >> .env
+            #     echo "DB_USER=$VM_DB_USER" >> .env
+            #     echo "DB_PASSWORD=$VM_DB_PASSWORD" >> .env
+            #     echo "DB_SCHEMA=$DB_SCHEMA" >> .env
+            #     echo "DB_DIALECT=$DB_DIALECT" >> .env
+            #     echo "DB_TIMEZONE=$DB_TIMEZONE" >> .env
+            #     echo "GCP_CREDENTIALS=$GCP_CREDENTIALS" >> .env
+            #     echo "SERVER_PORT=$SERVER_PORT" >> .env
+            #     cat .env
 
             - name: Zip Repository
               run: zip -r webapp.zip .
