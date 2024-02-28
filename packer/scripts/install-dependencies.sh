@@ -1,23 +1,22 @@
 #!/bin/bash
 
-export DBHOST=${DBHOST}
-export DBUSER=${DBUSER}
-export DBPASS=${DBPASS}
-export DATABASE=${DATABASE}
-export PORT=${PORT}
-export DBPORT=${DBPORT}
+# export DBHOST=${DBHOST}
+# export DBUSER=${DBUSER}
+# export DBPASS=${DBPASS}
+# export DATABASE=${DATABASE}
+# export PORT=${PORT}
+# export DBPORT=${DBPORT}
 
+# sudo dnf install mysql-server -y
+# sudo systemctl start mysqld
+# sudo systemctl status mysqld
+# sudo systemctl enable mysqld
 
-sudo dnf install mysql-server -y
-sudo systemctl start mysqld
-sudo systemctl status mysqld
-sudo systemctl enable mysqld
-
-mysql -u root -e "CREATE DATABASE mydb"
-echo mysql -u root -e "SHOW DATABASES"
-mysql -u root -e "CREATE USER 'tanmay'@'localhost' IDENTIFIED BY 'password@123'"
-mysql -u root -e "GRANT ALL PRIVILEGES ON mydb.* TO 'tanmay'@'localhost'"
-mysql -u root -e "FLUSH PRIVILEGES"
+# mysql -u root -e "CREATE DATABASE mydb"
+# echo mysql -u root -e "SHOW DATABASES"
+# mysql -u root -e "CREATE USER 'tanmay'@'localhost' IDENTIFIED BY 'password@123'"
+# mysql -u root -e "GRANT ALL PRIVILEGES ON mydb.* TO 'tanmay'@'localhost'"
+# mysql -u root -e "FLUSH PRIVILEGES"
 
 # Install Nodejs
 sudo dnf module install nodejs:20 -y
@@ -36,6 +35,7 @@ sudo npm install
 sleep 10
 
 # Change ownership
+# sudo chown csye6225:csye6225 .
 sudo chown -R csye6225 .
 sudo chgrp -R csye6225 .
 
