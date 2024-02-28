@@ -1,5 +1,6 @@
 [Unit]
 Description=webapp
+ConditionPathExists=/opt/webapp/.env
 After=network.target
 
 [Service]
@@ -13,7 +14,6 @@ RestartSec=3
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=csye6225
-
 
 [Install]
 WantedBy=multi-user.target
