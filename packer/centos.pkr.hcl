@@ -58,6 +58,11 @@ variable "source_image_family" {
   default = "centos-stream-8"
 }
 
+variable "machine_type" {
+  type = string
+  default = "e2-standard-8"
+}
+
 packer {
   required_plugins {
     googlecompute = {
@@ -74,6 +79,7 @@ source "googlecompute" "gcp-custom-image" {
   source_image_family = var.source_image_family
   zone                = var.gcp_zone
   ssh_username        = var.ssh_username
+  machine_type        = var.machine_type
 }
 
 # Define the build

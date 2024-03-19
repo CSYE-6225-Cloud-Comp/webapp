@@ -62,10 +62,6 @@ jobs:
               working-directory: /var/log
               run: |
                 sudo mkdir webapp
-            - name: Create a file
-              working-directory: /var/log/webapp
-              run: |
-                sudo touch webapp.log
 
             - name: Run Integration Tests
               run: npm test 
