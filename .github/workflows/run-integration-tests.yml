@@ -24,11 +24,14 @@ jobs:
         with:
           node-version: '18.x'
       - run: npm install
-      - name: Create a directory 
+      - name: Create a directory
+        working-directory: /var/log
         run: |
-         sudo cd /var/log
          sudo mkdir webapp
-         sudo touch /webapp/webapp.log
+      - name: Create a file
+        working-directory: /var/log/webapp
+        run: |
+         sudo touch webapp.log
       - run: npm test
       - run: echo "Integration tests passed successfully!"
           
