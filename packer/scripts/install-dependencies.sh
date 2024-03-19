@@ -39,22 +39,21 @@ cd webapp
 sudo npm install
 sleep 10
 
-# Move config file (config.yaml) to /etc/google-cloud-ops-agent/
-sudo mv ./packer/configuration/config.yaml /etc/google-cloud-ops-agent/
-
 # Change ownership
 # sudo chown csye6225:csye6225 .
 sudo chown -R csye6225 .
 sudo chgrp -R csye6225 .
 
-# Create a directory in /var/log
-sudo mkdir /var/log/webapp
-cd /var/log/webapp
-sudo chown -R csye6225 .
-sudo chgrp -R csye6225 . 
-
 sudo cp ./packer/webapp.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable webapp
+
+# Move config file (config.yaml) to /etc/google-cloud-ops-agent/
+sudo cp ./packer/configuration/config.yaml /etc/google-cloud-ops-agent/
+
+# Create a directory in /var/log
+sudo mkdir /var/log/webapp
+sudo chown -R csye6225 /var/log/webapp
+sudo chgrp -R csye6225 /var/log/webapp
 
 sudo systemctl restart google-cloud-ops-agent
