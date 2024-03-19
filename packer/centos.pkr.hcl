@@ -92,7 +92,7 @@ build {
     source      = "./webapp.zip"
     destination = "/tmp/webapp.zip"
   }
-  
+
   # Provisioner 3 - Install Dependencies
   provisioner "shell" {
     script = "packer/scripts/install-dependencies.sh"
