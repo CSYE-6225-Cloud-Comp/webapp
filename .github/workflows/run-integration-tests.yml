@@ -24,6 +24,11 @@ jobs:
         with:
           node-version: '18.x'
       - run: npm install
+      - name: Create a directory 
+        run: |
+         sudo cd /var/log
+         sudo mkdir webapp
+         sudo touch /webapp/webapp.log
       - run: npm test
       - run: echo "Integration tests passed successfully!"
           

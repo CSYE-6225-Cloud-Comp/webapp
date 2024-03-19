@@ -1,7 +1,7 @@
 import User from '../models/user-model.js';
 import * as UserService from '../services/user-service.js';
 import bcrypt from 'bcrypt';
-// import { Buffer } from buffer;
+import logger from '../../logger.js';
 
 export const createUser = async(request, response) => {
     // Check request body fields. If more fields than necessary throw an error
@@ -9,7 +9,6 @@ export const createUser = async(request, response) => {
 
     // Check if authentication disabled
     const authenticationHeader = request.headers.authorization;
-    console.log("Authentication Header: ", authenticationHeader);
     if(authenticationHeader !== undefined) {
         response.status(400).header('Cache-Control', 'no-cache').json();
         return;
@@ -18,7 +17,6 @@ export const createUser = async(request, response) => {
     // Check if request body missing
     console.log("Content Length: ", typeof(request.headers['content-length']));
     if(request.headers['content-length'] == 0 || Object.keys(request.query).length) {
-        console.log("Request body missing");
         response.status(400).header('Cache-Control', 'no-cache').json();
         return;
     }
@@ -34,9 +32,8 @@ export const createUser = async(request, response) => {
     // Throw an error if user already exists
     try {
         const isExistingUser = await UserService.isExistingUser(request.body.username);
-
         if(isExistingUser !== null) {
-            console.log("Inside isExistingUser");
+            logger.error("Already Registered!");
             response.status(400).header('Cache-Control', 'no-cache').json();
             return;
         }
@@ -54,7 +51,8 @@ export const createUser = async(request, response) => {
     // Create a new user if user does not exist
     try {
         const user = await UserService.createUser(request.body);
-        console.log("User: ", user);
+        logger.info("User Created!");
+        logger.info(new Date(), "User Email: ", user.username);
         response.status(201).header('Cache-Control', 'no-cache').json({
             id: user.id,
             username: user.username,

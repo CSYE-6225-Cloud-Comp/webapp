@@ -58,6 +58,12 @@ jobs:
             - name: Install Dependencies
               run: npm install
 
+            - name: Create a directory 
+              run: |
+                sudo cd /var/log
+                sudo mkdir webapp
+                sudo touch /webapp/webapp.log
+
             - name: Run Integration Tests
               run: npm test 
 

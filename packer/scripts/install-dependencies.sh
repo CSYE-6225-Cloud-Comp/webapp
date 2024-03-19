@@ -21,7 +21,12 @@
 # Install Nodejs
 sudo dnf module install nodejs:20 -y
 
+# Install Unzip
 sudo yum install unzip -y
+
+# Install OPS Agent
+sudo curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
+sudo bash add-google-cloud-ops-agent-repo.sh --also-install
 
 # Unzip webapp
 sudo mv /tmp/webapp.zip /opt/webapp.zip
@@ -34,6 +39,9 @@ cd webapp
 sudo npm install
 sleep 10
 
+# Move config file (config.yaml) to /etc/google-cloud-ops-agent/
+sudo mv ./packer/configuration/config.yaml /etc/google-cloud-ops-agent/
+
 # Change ownership
 # sudo chown csye6225:csye6225 .
 sudo chown -R csye6225 .
@@ -42,3 +50,5 @@ sudo chgrp -R csye6225 .
 sudo cp ./packer/webapp.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable webapp
+
+sudo systemctl restart google-cloud-ops-agent
