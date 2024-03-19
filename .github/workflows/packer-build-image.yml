@@ -59,10 +59,13 @@ jobs:
               run: npm install
 
             - name: Create a directory 
+              working-directory: /var/log
               run: |
-                cd /var/log
                 sudo mkdir webapp
-                sudo touch /webapp/webapp.log
+            - name: Create a file
+              working-directory: /var/log/webapp
+              run: |
+                sudo touch webapp.log
 
             - name: Run Integration Tests
               run: npm test 
