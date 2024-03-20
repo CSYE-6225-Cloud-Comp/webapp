@@ -11,7 +11,6 @@ const customFormat = winston.format.printf(({ timestamp, level, message }) => {
 });
 
 const logger = winston.createLogger({
-  level: "info",
   format: format.combine(
     format.json(),
     format.timestamp(),
