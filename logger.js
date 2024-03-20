@@ -17,7 +17,7 @@ const logger = winston.createLogger({
     customFormat
   ),
   transports: [
-    new winston.transports.File({ filename: "/var/log/webapp/webapp.log" }),
+    new winston.transports.File({ filename: "/var/log/webapp/webapp.log", level: "debug" }),
   ],
 })
 
