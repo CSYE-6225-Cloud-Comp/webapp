@@ -1,6 +1,6 @@
 variable "gcp_zone" {
   type    = string
-  default = "us-east1-b"
+  default = "us-central1-a"
 }
 
 variable "ssh_username" {
@@ -45,7 +45,7 @@ variable "gcp_project" {
 
 variable "gcp_region" {
   type    = string
-  default = "us-west1"
+  default = "us-central1"
 }
 
 variable "source_image" {
@@ -60,7 +60,7 @@ variable "source_image_family" {
 
 variable "machine_type" {
   type    = string
-  default = "e2-standard-8"
+  default = "e2-standard-16"
 }
 
 packer {
