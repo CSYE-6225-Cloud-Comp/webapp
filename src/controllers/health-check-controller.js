@@ -20,6 +20,7 @@ export const getHealthStatus = async (request, response) => {
         logger.info("Health check successful!");
         response.status(200).header('Cache-Control', 'no-cache').json();
     } catch (error) {
+        logger.error("Health check failed!");
         // Service Unavailable response and do not cache the response
         response.status(503).header('Cache-Control', 'no-cache').json();
     }
