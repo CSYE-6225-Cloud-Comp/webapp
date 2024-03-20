@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import logger from '../../logger.js';
 
 export const createUser = async(request, response) => {
+    logger.debug("Creating a new user");
     // Check request body fields. If more fields than necessary throw an error
     const allowedFields = ['first_name', 'last_name', 'password', 'username'];
 
@@ -16,7 +17,7 @@ export const createUser = async(request, response) => {
 
     // Check if request body missing
     if(request.headers['content-length'] == 0 || Object.keys(request.query).length) {
-        logger.error("Request boyd is missing when creating a user");
+        logger.error("Request body is missing when creating a user");
         response.status(400).header('Cache-Control', 'no-cache').json();
         return;
     }
@@ -72,6 +73,7 @@ export const createUser = async(request, response) => {
 
 // Get a user
 export const getUser = async(request, response) => {
+    logger.debug("Fetching user details");
     // Check if request body and parameters are empty
     if(request.headers['content-length'] !== undefined || Object.keys(request.query).length) {
         // Bad Request response and do not cache the response
@@ -117,7 +119,7 @@ export const getUser = async(request, response) => {
             return;
         }
         else {
-            logger.info(`User ${username} fetched!`);
+            logger.info(`User ${user.first_name} fetched!`);
             response.status(200).header('Cache-Control', 'no-cache').json({
                 id: user.id,
                 username: user.username,
@@ -136,6 +138,7 @@ export const getUser = async(request, response) => {
 }
 
 export const updateUser = async(request, response) => {
+    logger.debug("Updating user details");
     const userDetails = request.body;
 
     // Autheticate User

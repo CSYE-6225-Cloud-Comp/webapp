@@ -5,7 +5,6 @@ export const isExistingUser = async (username) => {
         where: { username: username } 
     });
 
-    console.log("isExistingUser: ", isExistingUser);
     return isExistingUser;
 }
 
