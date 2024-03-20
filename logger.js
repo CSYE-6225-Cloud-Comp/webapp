@@ -5,13 +5,13 @@ import moment from 'moment-timezone';
 const customFormat = winston.format.printf(({ timestamp, level, message }) => {
   return JSON.stringify({
     timestamp: timestamp,
-    level: level.toUpperCase(),
-    severity: winston.config.npm.levels[level],
+    level: level,
+    severity: level,
     message: message
   });
 });
 
-moment.tz.setDefault('America/New_York');
+moment.tz('America/New_York').format('z');
 
 const logger = winston.createLogger({
   level: "info",

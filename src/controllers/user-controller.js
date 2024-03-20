@@ -15,8 +15,8 @@ export const createUser = async(request, response) => {
     }
 
     // Check if request body missing
-    console.log("Content Length: ", typeof(request.headers['content-length']));
     if(request.headers['content-length'] == 0 || Object.keys(request.query).length) {
+        logger.error("Request boyd is missing when creating a user");
         response.status(400).header('Cache-Control', 'no-cache').json();
         return;
     }
@@ -24,6 +24,7 @@ export const createUser = async(request, response) => {
     // Check is the fields in the request body are the fields that we need
     for (const field of Object.keys(request.body)) {
         if (!allowedFields.includes(field)) {
+            logger.error("Unknown fields in the request body");
             response.status(400).header('Cache-Control', 'no-cache').json();
             return;
         }
@@ -33,7 +34,7 @@ export const createUser = async(request, response) => {
     try {
         const isExistingUser = await UserService.isExistingUser(request.body.username);
         if(isExistingUser !== null) {
-            logger.error("Already Registered!");
+            logger.error("User Already Registered!");
             response.status(400).header('Cache-Control', 'no-cache').json();
             return;
         }
@@ -44,6 +45,7 @@ export const createUser = async(request, response) => {
 
     // Check is the password is empty
     if(request.body.password === "" || typeof(request.body.password) !== 'string' ) {
+        logger.error("Password is empty");
         response.status(400).header('Cache-Control', 'no-cache').json();
         return;
     }
@@ -52,7 +54,6 @@ export const createUser = async(request, response) => {
     try {
         const user = await UserService.createUser(request.body);
         logger.info("User Created!");
-        logger.info(new Date(), "User Email: ", user.username);
         response.status(201).header('Cache-Control', 'no-cache').json({
             id: user.id,
             username: user.username,
@@ -63,7 +64,6 @@ export const createUser = async(request, response) => {
         });
         return;
     } catch (error) {
-        console.log("Error: ", error);
         response.status(400).header('Cache-Control', 'no-cache').json();
         return;
     }
@@ -98,8 +98,6 @@ export const getUser = async(request, response) => {
     const username = userCredentials[0];
     const password = userCredentials[1];
 
-    console.log("User Credentials: ", username, password);
-
     try {
         // Fecth user from database by username
         const user = await User.findOne({
@@ -119,6 +117,7 @@ export const getUser = async(request, response) => {
             return;
         }
         else {
+            logger.info(`User ${username} fetched!`);
             response.status(200).header('Cache-Control', 'no-cache').json({
                 id: user.id,
                 username: user.username,
@@ -137,9 +136,7 @@ export const getUser = async(request, response) => {
 }
 
 export const updateUser = async(request, response) => {
-    console.log("Inside updateUser");
     const userDetails = request.body;
-    console.log("User Details: ", userDetails);
 
     // Autheticate User
     const authenticationHeader = request.headers.authorization;
@@ -157,12 +154,8 @@ export const updateUser = async(request, response) => {
 
     const userCredentials = Buffer.from(auth[1], 'base64').toString('utf-8').split(':');
 
-    console.log("User Credentials: ", userCredentials);
-
     const username = userCredentials[0];
     const password = userCredentials[1];
-
-    console.log("User Credentials: ", username, password);
 
     try {
         // Fetch user from database by username
@@ -177,8 +170,6 @@ export const updateUser = async(request, response) => {
             response.status(401).header('Cache-Control', 'no-cache').json();
             return;
         }
-
-        console.log("User: ", user);
 
         // Check if request body is missing
         if(request.headers['content-length'] == 0 || Object.keys(request.query).length) {
@@ -211,10 +202,7 @@ export const updateUser = async(request, response) => {
                 where: { username: username }
             })
 
-            console.log("Updated User: ", updatedUser);
-
         } catch(error) {
-            console.log("Error here: ", error);
             response.status(400).header('Cache-Control', 'no-cache').json();
             return;
         }
