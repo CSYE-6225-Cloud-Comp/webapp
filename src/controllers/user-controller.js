@@ -60,25 +60,13 @@ export const createUser = async(request, response) => {
         const user = await UserService.createUser(request.body);
         logger.info("User Created!");
 
-        // Create a link for the user to verify their email
-        // const url = `<p>
-        // Please click on the link below to verify your account:
-        // <a href="http://localhost:3000/verify?token=${user.id}">
-        // http://localhost:3000/verify?token=${user.id}
-        // </a>
-        // </p>`;
-
-
-        //sendMail(user.username, user.username, "Verification Email", '', url);
-
         //Publish a message to the topic
         const data = JSON.stringify({
+            id: user.id,
             fromMail: user.username,
             to: user.username,
             subject: "Verification Email",
         });
-
-        // sendMail(user.username, user.username, "Verification Email", url);
 
         const message = await UserService.publish('verify_email', data);
 
@@ -263,7 +251,10 @@ export const methodNotAllowed = async(request, response) => {
 
 export const verifyUser = async(request, response) => {
     // Get the UUID from the url query parameter
+    logger.debug("Inside Verifying User Method");
+    console.log("Inside Verify User Method")
     const urlToken = request.query.token;
+    console.log("Token From the URL: ", urlToken);
 
     // Check if the expiration date of the token has passed
     const email = await Email.findOne({
@@ -272,12 +263,18 @@ export const verifyUser = async(request, response) => {
         }
     });
 
+    console.log("Email: ", email.token)
+    console.log("Email token equals url token: ", email.token === urlToken);
+
     const expirationDate = email.expiration;
     // If the token has not expired, update the user as verified in the users table, else mark do nothing
-    const user = null;
-    if(expirationDate.getTime() < new Date().getTime()) {
-        user = await User.update({
-            verified: false
+    if(Math.abs(expirationDate.getTime() - new Date().getTime()) > 120) {
+        response.status(403).header('Cache-Control', 'no-cache').json();
+        return;
+    }
+    else {
+        const user = await User.update({
+            verified: true
         }, {
             where: {
                 id: email.token
@@ -285,11 +282,6 @@ export const verifyUser = async(request, response) => {
         });
     }
 
-    if(user.verified === false) {
-        response.status(403).header('Cache-Control', 'no-cache').json();
-        console.log("User Not Verified!");
-        return;
-    }
     console.log("User Verified!");
 
     return;
