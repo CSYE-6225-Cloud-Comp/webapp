@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes, Model } from "sequelize";
+import { Sequelize, DataTypes } from "sequelize";
 import sequelize from "./db.js";
 import bcrypt from "bcrypt";
 
@@ -57,7 +57,12 @@ const User = sequelize.define('user', {
         defaultValue: DataTypes.NOW,
         allowNull: false,
         readOnly: true,
-    }
+    },
+    verified: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        allowNull: false,
+    },
 }, {
     timestamps: false
 });

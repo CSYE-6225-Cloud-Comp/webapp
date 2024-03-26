@@ -1,7 +1,11 @@
 import User from '../models/user-model.js';
+import Email from '../models/email.js';
 import * as UserService from '../services/user-service.js';
 import bcrypt from 'bcrypt';
 import logger from '../../logger.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export const createUser = async(request, response) => {
     logger.debug("Creating a new user");
@@ -55,16 +59,42 @@ export const createUser = async(request, response) => {
     try {
         const user = await UserService.createUser(request.body);
         logger.info("User Created!");
+
+        // Create a link for the user to verify their email
+        const url = `<p>
+        Please click on the link below to verify your account:
+        <a href="http://localhost:3000/verify?token=${user.id}">
+        http://localhost:3000/verify?token=${user.id}
+        </a>
+        </p>`;
+
+
+        //sendMail(user.username, user.username, "Verification Email", '', url);
+
+        //Publish a message to the topic
+        const data = JSON.stringify({
+            fromMail: user.username,
+            to: user.username,
+            subject: "Verification Email",
+            text: url
+        });
+
+        // sendMail(user.username, user.username, "Verification Email", url);
+
+        const message = await UserService.publish('verify_email', data);
+
         response.status(201).header('Cache-Control', 'no-cache').json({
             id: user.id,
             username: user.username,
             first_name: user.first_name,
             last_name: user.last_name,
             account_created: user.account_created,
-            account_updated: user.account_updated
+            account_updated: user.account_updated,
         });
+
         return;
     } catch (error) {
+        console.log("Error: ", error);
         response.status(400).header('Cache-Control', 'no-cache').json();
         return;
     }
@@ -105,6 +135,11 @@ export const getUser = async(request, response) => {
         const user = await User.findOne({
             where: { username: username }
         });
+
+        if(user !== null && user.verified !== true) {
+            response.status(401).header('Cache-Control', 'no-cache').json();
+            return;
+        }
 
         const userAccountCreatedDate = new Date(user.account_created.getTime() - 5 * 60 * 60 * 1000);
         const userAccountUpdatedDate = new Date(user.account_updated.getTime() - 5 * 60 * 60 * 1000);
@@ -166,6 +201,11 @@ export const updateUser = async(request, response) => {
             where: { username: username }
         })
 
+        if(user !== null && user.verified !== true) {
+            response.status(401).header('Cache-Control', 'no-cache').json();
+            return;
+        }
+
         // Check if user entered password and the password stored in the database is the same
         const comparePassword = await bcrypt.compare(password, user.password);
 
@@ -219,5 +259,39 @@ export const updateUser = async(request, response) => {
 
 export const methodNotAllowed = async(request, response) => {
     response.status(405).header('Cache-Control', 'no-cache').json();
+    return;
+}
+
+export const verifyUser = async(request, response) => {
+    // Get the UUID from the url query parameter
+    const urlToken = request.query.token;
+
+    // Check if the expiration date of the token has passed
+    const email = await Email.findOne({
+        where: {
+            token: urlToken
+        }
+    });
+
+    const expirationDate = email.expiration;
+    // If the token has not expired, update the user as verified in the users table, else mark do nothing
+    const user = null;
+    if(expirationDate.getTime() < new Date().getTime()) {
+        user = await User.update({
+            verified: false
+        }, {
+            where: {
+                id: email.token
+            }
+        });
+    }
+
+    if(user.verified === false) {
+        response.status(403).header('Cache-Control', 'no-cache').json();
+        console.log("User Not Verified!");
+        return;
+    }
+    console.log("User Verified!");
+
     return;
 }

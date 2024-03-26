@@ -1,4 +1,10 @@
 import User from "../models/user-model.js";
+import {PubSub} from '@google-cloud/pubsub';
+
+const pubSubClient = new PubSub({
+    projectId: "tf-gcp-infra"
+});
+
 
 export const isExistingUser = async (username) => {
     const isExistingUser = await User.findOne({ 
@@ -49,3 +55,16 @@ export const getUser = async (username) => {
         throw new Error("Unable to get user details");
     }
 }
+
+export const publish = async (topicId, data) => {
+    const dataBuffer = Buffer.from(data);
+    try {
+        const messageId = await pubSubClient
+            .topic(topicId)
+            .publishMessage({data: dataBuffer});
+        console.log(`Message ${messageId} published.`);
+    } catch (error) {
+        console.error(`Received error while publishing: ${error.message}`);
+        process.exitCode = 1;
+    }
+};

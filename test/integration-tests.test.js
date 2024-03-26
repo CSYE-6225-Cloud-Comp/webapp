@@ -1,6 +1,7 @@
 import request from "supertest";
 import app from "../app.js";
 import sequelize from "../src/models/db.js";
+import User from "../src/models/user-model.js";
 
 describe("Account Creation and Updation", () => {
     // Sync the database before running the tests
@@ -17,11 +18,25 @@ describe("Account Creation and Updation", () => {
                 "username": "johndoe@example.com",
                 "password": "password"
             });
-        console.log("postResponse", postResponse.body);
         expect(postResponse.statusCode).toBe(201);
         expect(postResponse.headers).toMatchObject({ 'cache-control': 'no-cache' });
 
         // const comparePassword = await bcrypt.compare("password", user.password);
+
+        const updatedUser = await User.update(
+            { 
+                verified: true 
+            },
+            { 
+                where: { 
+                    id: postResponse.body.id 
+                } 
+            }
+        );
+    
+        console.log("Updated User: ", updatedUser);
+        // Expectations for the update operation
+        expect(updatedUser[0]).toBe(1);
 
         const encodedCredentials = Buffer.from("johndoe@example.com:password").toString('base64');
         const getResponse = await request(app).get("/v1/user/self")
@@ -49,6 +64,20 @@ describe("Account Creation and Updation", () => {
         expect(putResponse.statusCode).toBe(204);
         expect(putResponse.headers).toMatchObject({ 'cache-control': 'no-cache' });
         expect(putResponse.body).toEqual({});
+
+        // const updatedUser = await User.update(
+        //     { 
+        //         verified: true 
+        //     },
+        //     { 
+        //         where: { 
+        //             username: "johndoe@example.com" 
+        //         } 
+        //     }
+        // );
+    
+        // // Expectations for the update operation
+        // expect(updatedUser[0]).toBe(1);
 
         const updatedEncodedCredentials = Buffer.from("johndoe@example.com:password1").toString('base64');
         const getResponse = await request(app).get("/v1/user/self")
