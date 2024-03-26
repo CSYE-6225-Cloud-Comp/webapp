@@ -20,6 +20,16 @@ jobs:
          sudo systemctl status mysql.service
          sudo mysql --user=$DB_USER --password=$DB_PASSWORD -e "CREATE DATABASE $DB_SCHEMA"
       - uses: actions/checkout@v4
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+      
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+      
+      - name: 'Use gcloud CLI'
+        run: 'gcloud info'
       - uses: actions/setup-node@v3
         with:
           node-version: '18.x'
