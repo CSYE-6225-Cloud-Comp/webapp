@@ -61,12 +61,12 @@ export const createUser = async(request, response) => {
         logger.info("User Created!");
 
         // Create a link for the user to verify their email
-        const url = `<p>
-        Please click on the link below to verify your account:
-        <a href="http://localhost:3000/verify?token=${user.id}">
-        http://localhost:3000/verify?token=${user.id}
-        </a>
-        </p>`;
+        // const url = `<p>
+        // Please click on the link below to verify your account:
+        // <a href="http://localhost:3000/verify?token=${user.id}">
+        // http://localhost:3000/verify?token=${user.id}
+        // </a>
+        // </p>`;
 
 
         //sendMail(user.username, user.username, "Verification Email", '', url);
@@ -76,7 +76,6 @@ export const createUser = async(request, response) => {
             fromMail: user.username,
             to: user.username,
             subject: "Verification Email",
-            text: url
         });
 
         // sendMail(user.username, user.username, "Verification Email", url);

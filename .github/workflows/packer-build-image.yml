@@ -25,6 +25,17 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v4
 
+            - id: 'auth'
+              uses: 'google-github-actions/auth@v2'
+              with:
+                credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+      
+            - name: 'Set up Cloud SDK'
+              uses: 'google-github-actions/setup-gcloud@v2'
+      
+            - name: 'Use gcloud CLI'
+              run: 'gcloud info'
+
             - name: Setup MYSQL
               run: |
                 sudo /lib/systemd/systemd-sysv-install enable mysql
@@ -71,17 +82,6 @@ jobs:
               id: setup
               with:
                 version: ${{ env.PRODUCT_VERSION }}
-
-            - id: 'auth'
-              uses: 'google-github-actions/auth@v2'
-              with:
-                credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
-      
-            - name: 'Set up Cloud SDK'
-              uses: 'google-github-actions/setup-gcloud@v2'
-      
-            - name: 'Use gcloud CLI'
-              run: 'gcloud info'
               
             - name: Initialize Packer
               run: packer init $GITHUB_WORKSPACE/packer/centos.pkr.hcl
