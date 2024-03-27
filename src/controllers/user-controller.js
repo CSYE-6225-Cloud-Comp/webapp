@@ -63,7 +63,7 @@ export const createUser = async(request, response) => {
         //Publish a message to the topic
         const data = JSON.stringify({
             id: user.id,
-            fromMail: user.username,
+            fromMail: "<no-reply@cloudnative.me>",
             to: user.username,
             subject: "Verification Email",
         });

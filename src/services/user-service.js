@@ -1,5 +1,6 @@
 import User from "../models/user-model.js";
 import {PubSub} from '@google-cloud/pubsub';
+import logger from "../../logger.js";
 
 const pubSubClient = new PubSub({
     projectId: "tf-gcp-infra"
@@ -63,6 +64,7 @@ export const publish = async (topicId, data) => {
             .topic(topicId)
             .publishMessage({data: dataBuffer});
         console.log(`Message ${messageId} published.`);
+        logger.debug(`Message ${messageId} published.`);
     } catch (error) {
         console.error(`Received error while publishing: ${error.message}`);
         process.exitCode = 1;
