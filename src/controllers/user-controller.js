@@ -255,7 +255,7 @@ export const verifyUser = async(request, response) => {
     console.log("Inside Verify User Method")
     const urlToken = request.query.token;
     console.log("Token From the URL: ", urlToken);
-    logger.debug("Token From the URL: ", urlToken);
+    logger.debug(`Token From the URL ${urlToken}`);
 
     // Check if the expiration date of the token has passed
     const email = await Email.findOne({
@@ -265,14 +265,14 @@ export const verifyUser = async(request, response) => {
     });
 
     console.log("Email: ", email.token)
-    logger.debug("Email: ", email.token);
+    logger.debug(`Email: ${email.token}`);
     console.log("Email token equals url token: ", email.token === urlToken);
-    logger.debug("Email token equals url token: ", email.token === urlToken);
+    logger.debug(`Email token equals url token: ${email.token === urlToken}`);
 
     const expirationDate = email.expiration;
     // If the token has not expired, update the user as verified in the users table, else mark do nothing
-    logger.debug("Time Left: ", Math.abs((expirationDate.getTime() - new Date().getTime()) / 10000));
-    if(Math.abs((expirationDate.getTime() - new Date().getTime()) / 10000) > 120) {
+    logger.debug(`Time Left for Token to Expire: ${Math.abs((expirationDate.getTime() - new Date().getTime()) / 1000)}`)
+    if(Math.abs((expirationDate.getTime() - new Date().getTime()) / 1000) > 120) {
         response.status(403).header('Cache-Control', 'no-cache').json();
         return;
     }
