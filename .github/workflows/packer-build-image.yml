@@ -6,7 +6,7 @@ name: Build Packer Template
 on: [pull_request]
 jobs:
     if-merged:
-        if: github.event.pull_request.merged == true
+        if: github.event.pull_request.merged == false
         runs-on: ubuntu-latest
         env:
             DB_HOST: ${{ vars.DB_HOST }}
