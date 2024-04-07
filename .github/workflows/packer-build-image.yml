@@ -1,8 +1,9 @@
 name: Build Packer Template
-on:
-    pull_request:
-        types:
-            - closed
+# on:
+#     pull_request:
+#         types:
+#             - closed
+on: [pull_request]
 jobs:
     if-merged:
         if: github.event.pull_request.merged == true
@@ -91,6 +92,7 @@ jobs:
 
             - name: Get the image ID
               run: |
-                echo gcloud compute images list --format="value(NAME)" --project "tf-gcp-infra" --no-standard-images --sort-by=~creationTimestamp --limit=1
-                echo ::set-env name=image_id::$(gcloud compute images list --format="value(NAME)" --project "tf-gcp-infra" --no-standard-images --sort-by=~creationTimestamp --limit=1)
+                
+                echo "image_id=$(gcloud compute images list --format="value(NAME)" --project "tf-gcp-infra" 
+                --no-standard-images --sort-by=~creationTimestamp --limit=1)" >> "$GITHUB_ENV"
                 echo $image_id
