@@ -88,25 +88,31 @@ jobs:
             - name: Initialize Packer
               run: packer init $GITHUB_WORKSPACE/packer/centos.pkr.hcl
 
-            - name: Build Packer Template
-              run: packer build $GITHUB_WORKSPACE/packer/centos.pkr.hcl
+            # - name: Build Packer Template
+            #   run: packer build $GITHUB_WORKSPACE/packer/centos.pkr.hcl
 
             - name: Get the image ID
               run: |
+                echo "test=value" >> "$GITHUB_ENV"
                 echo "image_id=$(gcloud compute images list --format="value(NAME)" --project "tf-gcp-infra" --no-standard-images --sort-by=~creationTimestamp --limit=1)" >> "$GITHUB_ENV"
                 printf '%s\n' "Image ID : $image_id" 
                 printf '%s\n' "$image_id" 
+                printf '%s\n' "Test: $test"
+            - name: Get image id value
+              run: |
+                printf '%s\n' "Image ID : $image_id"
+                printf '%s\n' "$image_id"
             
-            # - name: Create a VM instance template
-            #   run: |
-            #     gcloud compute instance-templates create "webapp-template-$INSTANCE_TEMPLATE_VERSION" \
-            #     --machine-type "e2-micro" \
-            #     --network "default" \
-            #     --subnet "default" \
-            #     --tags "http-server" \
-            #     --image "$image_id" \
-            #     --image-project "tf-gcp-infra" \
-            #     --boot-disk-size "10" \
-            #     --boot-disk-type "pd-standard" \
-            #     --boot-disk-device-name "webapp-template" \
-            #     --metadata "startup-script-url=gs://tf-gcp-infra/startup.sh"
+            - name: Create a VM instance template
+              run: |
+                gcloud compute instance-templates create "webapp-template-$INSTANCE_TEMPLATE_VERSION" \
+                --machine-type "e2-micro" \
+                --network "default" \
+                --subnet "default" \
+                --tags "http-server" \
+                --image "$image_id" \
+                --image-project "tf-gcp-infra" \
+                --boot-disk-size "10" \
+                --boot-disk-type "pd-standard" \
+                --boot-disk-device-name "webapp-template" \
+                --metadata "startup-script-url=gs://tf-gcp-infra/startup.sh"
