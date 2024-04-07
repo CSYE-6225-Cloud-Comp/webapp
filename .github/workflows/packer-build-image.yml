@@ -92,6 +92,5 @@ jobs:
 
             - name: Get the image ID
               run: |
-                
                 echo "image_id=$(gcloud compute images list --format="value(NAME)" --project "tf-gcp-infra" --no-standard-images --sort-by=~creationTimestamp --limit=1)" >> "$GITHUB_ENV"
-                echo $image_id
+                printf "Image ID: %s\n" "$image_id"
