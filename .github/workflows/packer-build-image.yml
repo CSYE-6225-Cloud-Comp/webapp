@@ -22,6 +22,7 @@ jobs:
             SERVER_PORT: ${{ vars.SERVER_PORT }}
             VM_DB_USER: ${{ secrets.VM_DB_USER }}
             VM_DB_PASSWORD: ${{ secrets.VM_DB_PASSWORD }}
+            INSTANCE_TEMPLATE_VERSION: ${{ vars.INSTANCE_TEMPLATE_VERSION }}
         steps:
             - name: Checkout
               uses: actions/checkout@v4
@@ -92,5 +93,20 @@ jobs:
 
             - name: Get the image ID
               run: |
-                echo "image_id=$(gcloud compute images list --format="value(NAME)" --project "tf-gcp-infra" --no-standard-images --sort-by=~creationTimestamp --limit=1)" >> "$GITHUB_ENV"
-                printf "Image ID: %s\n" "$image_id"
+                echo "image_id=gcloud compute images list --format="value(NAME)" --project "tf-gcp-infra" --no-standard-images --sort-by=~creationTimestamp --limit=1" >> "$GITHUB_ENV"
+                printf '%s\n' "Image ID : $image_id" 
+                printf '%s\n' "$image_id" 
+            
+            # - name: Create a VM instance template
+            #   run: |
+            #     gcloud compute instance-templates create "webapp-template-$INSTANCE_TEMPLATE_VERSION" \
+            #     --machine-type "e2-micro" \
+            #     --network "default" \
+            #     --subnet "default" \
+            #     --tags "http-server" \
+            #     --image "$image_id" \
+            #     --image-project "tf-gcp-infra" \
+            #     --boot-disk-size "10" \
+            #     --boot-disk-type "pd-standard" \
+            #     --boot-disk-device-name "webapp-template" \
+            #     --metadata "startup-script-url=gs://tf-gcp-infra/startup.sh"
