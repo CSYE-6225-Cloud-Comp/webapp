@@ -137,6 +137,7 @@ jobs:
                   --maintenance-policy=MIGRATE \
                   --provisioning-model=STANDARD \
                   --service-account=compute-engine-service-account@tf-gcp-infra.iam.gserviceaccount.com \
+                  --region=us-east1 \
                   --tags=webapp,allow-health-check,deny-webapp-traffic
                   --scopes=cloud-platform \
                   --metadata=startup-script=<<-EOT
