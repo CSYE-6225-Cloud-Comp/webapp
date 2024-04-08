@@ -133,7 +133,7 @@ jobs:
                   --boot-disk-size=100GB \
                   --image=projects/tf-gcp-infra/global/images/$image_id \
                   --machine-type=e2-medium \
-                  --network-interface=network=terraform-vpc,network-tier=PREMIUM,subnetwork=webapp \
+                  --network-interface=network=terraform-vpc,network-tier=PREMIUM,subnet=webapp \
                   --maintenance-policy=MIGRATE \
                   --provisioning-model=STANDARD \
                   --service-account=$GCP_CREDENTIALS \
