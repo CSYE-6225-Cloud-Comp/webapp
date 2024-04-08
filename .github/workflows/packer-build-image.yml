@@ -38,6 +38,15 @@ jobs:
             - name: 'Use gcloud CLI'
               run: 'gcloud info'
 
+            - id: 'secrets'
+              uses: 'google-github-actions/get-secretmanager-secrets@v2'
+              with:
+                secrets: |-
+                  ip:projects/tf-gcp-infra/secrets/db_ip
+                  user:projects/tf-gcp-infra/secrets/db_user
+                  password:projects/tf-gcp-infra/secrets/db_password
+                  schema:projects/tf-gcp-infra/secrets/db_schema
+
             - name: Setup MYSQL
               run: |
                 sudo /lib/systemd/systemd-sysv-install enable mysql
@@ -93,26 +102,92 @@ jobs:
 
             - name: Get the image ID
               run: |
-                echo "test=value" >> "$GITHUB_ENV"
                 echo "image_id=$(gcloud compute images list --format="value(NAME)" --project "tf-gcp-infra" --no-standard-images --sort-by=~creationTimestamp --limit=1)" >> "$GITHUB_ENV"
-                printf '%s\n' "Image ID : $image_id" 
-                printf '%s\n' "$image_id" 
-                printf '%s\n' "Test: $test"
             - name: Get image id value
               run: |
                 printf '%s\n' "Image ID : $image_id"
-                printf '%s\n' "$image_id"
             
+            # - name: Create a VM instance template
+            #   run: |
+            #     gcloud compute instance-templates create webapp-instance-template \
+            #       --instance-template-region=us-east1 \
+            #       --boot-disk-auto-delete=true \
+            #       --boot-disk-
+            #       --image=projects/tf-gcp-infra/global/images/$image_id \
+            #       --machine-type=n1-standard-1 \
+            #       --network-interface=[network-tier=PREMIUM,network=terraform-vpc,subnetwork=webapp] \
+            #       --maintenance-policy=MIGRATE \
+            #       --provisioning-model=STANDARD \
+            #       --service-account=$GCP_CREDENTIALS \
+            #       --tags=[webapp,allow-health-check,deny-webapp-traffic]
+            #       --scopes[cloud-platform]
+            #       --metadata-from-file=startup-script=$GITHUB_WORKSPACE/packer/scripts/startup.sh
+
             - name: Create a VM instance template
               run: |
-                gcloud compute instance-templates create "webapp-template-$INSTANCE_TEMPLATE_VERSION" \
-                --machine-type "e2-micro" \
-                --network "default" \
-                --subnet "default" \
-                --tags "http-server" \
-                --image "$image_id" \
-                --image-project "tf-gcp-infra" \
-                --boot-disk-size "10" \
-                --boot-disk-type "pd-standard" \
-                --boot-disk-device-name "webapp-template" \
-                --metadata "startup-script-url=gs://tf-gcp-infra/startup.sh"
+                gcloud compute instance-templates create webapp-instance-template \
+                  --instance-template-region=us-east1 \
+                  --boot-disk-auto-delete=true \
+                  --boot-disk-type=pd-balanced \
+                  --boot-disk-size=100GB \
+                  --image=projects/tf-gcp-infra/global/images/$image_id \
+                  --machine-type=e2-medium \
+                  --network-interface=[network-tier=PREMIUM,network=terraform-vpc,subnetwork=webapp] \
+                  --maintenance-policy=MIGRATE \
+                  --provisioning-model=STANDARD \
+                  --service-account=$GCP_CREDENTIALS \
+                  --tags=[webapp,allow-health-check,deny-webapp-traffic]
+                  --scopes[cloud-platform] \
+                  --service-account=compute-engine-service-account@tf-gcp-infra.iam.gserviceaccount.com \
+                  --metadata=startup-script=<<-EOT
+                    #!/bin/bash
+                    cd /opt/webapp
+              
+                    if [ ! -f /opt/webapp/.env ]; then
+                        touch /opt/webapp/.env
+                        echo DB_HOST=${{ steps.secrets.outputs.ip }} >> .env
+                        echo DB_PORT=3306 >> .env
+                        echo DB_USER=${{ steps.secrets.outputs.user }} >> .env
+                        echo DB_PASSWORD=${{ steps.secrets.outputs.password }} >> .env
+                        echo DB_SCHEMA=${{ steps.secrets.outputs.schema }} >> .env
+                        echo DB_TIMEZONE=-05:00 >> .env
+                        echo PORT=3000 >> .env
+                        cat .env
+                    else 
+                      if [ ! -s /opt/webapp/.env ]; then
+                        echo DB_HOST=${{ steps.secrets.outputs.ip }} >> .env
+                        echo DB_PORT=3306 >> .env
+                        echo DB_USER=${{ steps.secrets.outputs.user }} >> .env
+                        echo DB_PASSWORD=${{ steps.secrets.outputs.password }} >> .env
+                        echo DB_SCHEMA=${{ steps.secrets.outputs.schema }} >> .env
+                        echo DB_TIMEZONE=-05:00 >> .env
+                        echo PORT=3000 >> .env
+                        cat .env
+                      fi
+                    fi
+              
+                  EOT
+
+            - name: Set new instance template to the existing instance group
+              run: |
+                gcloud compute instance-groups managed set-instance-template lb-backend-example \
+                  --template=webapp-instance-template \
+                  --region=us-east1 
+            
+            # - name: Recreate instances
+            #   run: |
+            #     gcloud compute instance-groups managed recreate-instances webapp-instance-group \
+            #       --instances=webapp-instance-group \
+            #       --zone=us-east1-b
+
+            - name: Recreate instances
+              run: |
+                gcloud compute instance-groups managed rolling-action start-update lb-backend-example \
+                  --version=instance-template=webapp-instance-template \
+                  --region=us-east1
+                  --replacement-method=RECREATE
+            
+            - name: Wait until the instance group refreshes
+              run: |
+                gcloud compute instance-groups managed wait-until --version-target-reached lb-backend-example \
+                  --region=us-east1
