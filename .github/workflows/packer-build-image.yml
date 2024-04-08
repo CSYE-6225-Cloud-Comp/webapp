@@ -101,6 +101,9 @@ jobs:
             - name: Store secrets in env
               run: |
                 echo "db_host=$(gcloud secrets versions access latest --secret="db_ip")" >> "$GITHUB_ENV"
+                echo "db_password=$(gcloud secrets versions access latest --secret="db_password")" >> "$GITHUB_ENV"
+                echo "db_schema=$(gcloud secrets versions access latest --secret="db_schema")" >> "$GITHUB_ENV"
+                echo "db_user=$(gcloud secrets versions access latest --secret="db_user")" >> "$GITHUB_ENV"
 
             - name: Print secret values
               run: |
@@ -130,12 +133,12 @@ jobs:
                   --boot-disk-size=100GB \
                   --image=projects/tf-gcp-infra/global/images/$image_id \
                   --machine-type=e2-medium \
-                  --network-interface=[network-tier=PREMIUM,network=terraform-vpc,subnetwork=webapp] \
+                  --network-interface=network-tier=PREMIUM,network=terraform-vpc,subnetwork=webapp \
                   --maintenance-policy=MIGRATE \
                   --provisioning-model=STANDARD \
                   --service-account=$GCP_CREDENTIALS \
-                  --tags=[webapp,allow-health-check,deny-webapp-traffic]
-                  --scopes[cloud-platform] \
+                  --tags=webapp,allow-health-check,deny-webapp-traffic
+                  --scopes=cloud-platform \
                   --service-account=compute-engine-service-account@tf-gcp-infra.iam.gserviceaccount.com \
                   --metadata=startup-script=<<-EOT
                     #!/bin/bash
@@ -143,21 +146,21 @@ jobs:
               
                     if [ ! -f /opt/webapp/.env ]; then
                         touch /opt/webapp/.env
-                        echo DB_HOST=${{ steps.secrets.outputs.ip }} >> .env
+                        echo DB_HOST=$db_host >> .env
                         echo DB_PORT=3306 >> .env
-                        echo DB_USER=${{ steps.secrets.outputs.user }} >> .env
-                        echo DB_PASSWORD=${{ steps.secrets.outputs.password }} >> .env
-                        echo DB_SCHEMA=${{ steps.secrets.outputs.schema }} >> .env
+                        echo DB_USER=$db_user >> .env
+                        echo DB_PASSWORD=$db_password >> .env
+                        echo DB_SCHEMA=$db_schema >> .env
                         echo DB_TIMEZONE=-05:00 >> .env
                         echo PORT=3000 >> .env
                         cat .env
                     else 
                       if [ ! -s /opt/webapp/.env ]; then
-                        echo DB_HOST=${{ steps.secrets.outputs.ip }} >> .env
+                        echo DB_HOST=$db_host >> .env
                         echo DB_PORT=3306 >> .env
-                        echo DB_USER=${{ steps.secrets.outputs.user }} >> .env
-                        echo DB_PASSWORD=${{ steps.secrets.outputs.password }} >> .env
-                        echo DB_SCHEMA=${{ steps.secrets.outputs.schema }} >> .env
+                        echo DB_USER=$db_user >> .env
+                        echo DB_PASSWORD=$db_password >> .env
+                        echo DB_SCHEMA=$db_schema >> .env
                         echo DB_TIMEZONE=-05:00 >> .env
                         echo PORT=3000 >> .env
                         cat .env
