@@ -139,7 +139,7 @@ jobs:
                   --service-account=compute-engine-service-account@tf-gcp-infra.iam.gserviceaccount.com \
                   --region=us-east1 \
                   --tags=webapp,allow-health-check,deny-webapp-traffic
-                  --scopes=https://www.googleapis.com/auth/cloud-platform \
+                  --scopes=cloud-platform \
                   --metadata=startup-script=<<-EOT
                     #!/bin/bash
                     cd /opt/webapp
