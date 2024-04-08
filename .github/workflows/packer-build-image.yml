@@ -38,15 +38,6 @@ jobs:
             - name: 'Use gcloud CLI'
               run: 'gcloud info'
 
-            - id: 'secrets'
-              uses: 'google-github-actions/get-secretmanager-secrets@v2'
-              with:
-                secrets: |-
-                  ip:projects/tf-gcp-infra/secrets/db_ip
-                  user:projects/tf-gcp-infra/secrets/db_user
-                  password:projects/tf-gcp-infra/secrets/db_password
-                  schema:projects/tf-gcp-infra/secrets/db_schema
-
             - name: Setup MYSQL
               run: |
                 sudo /lib/systemd/systemd-sysv-install enable mysql
@@ -114,10 +105,6 @@ jobs:
             - name: Print secret values
               run: |
                 printf '%s\n' "IP: $DB_HOST"
-                echo "IP: ${{ steps.secrets.outputs.ip }}"
-                echo "USER: ${{ steps.secrets.outputs.user }}"
-                echo "PASSWORD: ${{ steps.secrets.outputs.password }}"
-                echo "SCHEMA: ${{ steps.secrets.outputs.schema }}"
             
             # - name: Create a VM instance template
             #   run: |
