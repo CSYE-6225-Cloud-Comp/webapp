@@ -136,7 +136,7 @@ jobs:
                   --network-interface=network=terraform-vpc,network-tier=PREMIUM,subnet=webapp \
                   --maintenance-policy=MIGRATE \
                   --provisioning-model=STANDARD \
-                  --service-account=$GCP_CREDENTIALS \
+                  --service-account=compute-engine-service-account@tf-gcp-infra.iam.gserviceaccount.com \
                   --tags=webapp,allow-health-check,deny-webapp-traffic
                   --scopes=cloud-platform \
                   --metadata=startup-script=<<-EOT
