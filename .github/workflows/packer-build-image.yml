@@ -107,6 +107,18 @@ jobs:
               run: |
                 printf '%s\n' "Image ID : $image_id"
             
+            - name: Store secrets in env
+              run: |
+                echo "DB_HOST=$(gcloud secrets versions access latest --secret="db_ip")" >> "$GITHUB_ENV"
+
+            - name: Print secret values
+              run: |
+                printf '%s\n' "IP: $DB_HOST"
+                echo "IP: ${{ steps.secrets.outputs.ip }}"
+                echo "USER: ${{ steps.secrets.outputs.user }}"
+                echo "PASSWORD: ${{ steps.secrets.outputs.password }}"
+                echo "SCHEMA: ${{ steps.secrets.outputs.schema }}"
+            
             # - name: Create a VM instance template
             #   run: |
             #     gcloud compute instance-templates create webapp-instance-template \
