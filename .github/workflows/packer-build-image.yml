@@ -100,11 +100,11 @@ jobs:
             
             - name: Store secrets in env
               run: |
-                echo "DB_HOST=$(gcloud secrets versions access latest --secret="db_ip")" >> "$GITHUB_ENV"
+                echo "db_host=$(gcloud secrets versions access latest --secret="db_ip")" >> "$GITHUB_ENV"
 
             - name: Print secret values
               run: |
-                printf '%s\n' "IP: $DB_HOST"
+                printf '%s\n' "IP: $db_host"
             
             # - name: Create a VM instance template
             #   run: |
@@ -126,7 +126,6 @@ jobs:
               run: |
                 gcloud compute instance-templates create webapp-instance-template \
                   --instance-template-region=us-east1 \
-                  --boot-disk-auto-delete=true \
                   --boot-disk-type=pd-balanced \
                   --boot-disk-size=100GB \
                   --image=projects/tf-gcp-infra/global/images/$image_id \
