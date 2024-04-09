@@ -101,9 +101,11 @@ jobs:
             - name: Store secrets in env
               run: |
                 echo "db_host=$(gcloud secrets versions access latest --secret="db_ip")" >> "$GITHUB_ENV"
+                echo "dbHost=$(gcloud secrets versions access latest --secret="db_ip")" >> "$GITHUB_OUTPUT"
                 echo "db_password=$(gcloud secrets versions access latest --secret="db_password")" >> "$GITHUB_ENV"
                 echo "db_schema=$(gcloud secrets versions access latest --secret="db_schema")" >> "$GITHUB_ENV"
                 echo "db_user=$(gcloud secrets versions access latest --secret="db_user")" >> "$GITHUB_ENV"
+              id: get-secrets
 
             - name: Print secret values
               run: |
@@ -126,6 +128,11 @@ jobs:
             #       --metadata-from-file=startup-script=$GITHUB_WORKSPACE/packer/scripts/startup.sh
 
             - name: Create a VM instance template
+              env:
+                db_host: $db_host
+                db_password: $db_password
+                db_schema: $db_schema
+                db_user: $db_user
               run: |
                 gcloud compute instance-templates create webapp-instance-template \
                   --instance-template-region=us-east1 \
@@ -145,11 +152,11 @@ jobs:
               
                   if [ ! -f /opt/webapp/.env ]; then
                       touch /opt/webapp/.env
-                      echo DB_HOST=${$db_host} >> .env
+                      echo DB_HOST=${{steps.get-secrets.outputs.dbHost}} >> .env
                       echo DB_PORT=3306 >> .env
-                      echo DB_USER=${db_user} >> .env
-                      echo DB_PASSWORD=${db_password} >> .env
-                      echo DB_SCHEMA=${db_schema} >> .env
+                      echo DB_USER=$db_user >> .env
+                      echo DB_PASSWORD=$db_password >> .env
+                      echo DB_SCHEMA=$db_schema >> .env
                       echo DB_TIMEZONE=-05:00 >> .env
                       echo PORT=3000 >> .env
                       cat .env
