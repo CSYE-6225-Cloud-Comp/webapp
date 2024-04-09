@@ -183,7 +183,7 @@ jobs:
                 gcloud compute instance-groups managed rolling-action start-update lb-backend-example \
                   --version=template=projects/tf-gcp-infra/regions/us-east1/instanceTemplates/webapp-instance-template \
                   --region=us-east1 \
-                  --replacement-method=RECREATE
+                  --replacement-method=recreate
             
             - name: Wait until the instance group refreshes
               run: |
