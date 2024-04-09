@@ -102,16 +102,16 @@ jobs:
               run: |
                 echo "db_host=$(gcloud secrets versions access latest --secret="db_ip")" >> "$GITHUB_OUTPUT"
                 echo "db_password=$(gcloud secrets versions access latest --secret="db_password")" >> "$GITHUB_OUTPUT"
-                echo "db_schema=$(gcloud secrets versions access latest --secret="db_schema")" >> "$$GITHUB_OUTPUT"
-                echo "db_user=$(gcloud secrets versions access latest --secret="db_user")" >> "$$GITHUB_OUTPUT"
+                echo "db_schema=$(gcloud secrets versions access latest --secret="db_schema")" >> "$GITHUB_OUTPUT"
+                echo "db_user=$(gcloud secrets versions access latest --secret="db_user")" >> "$GITHUB_OUTPUT"
               id: get-secrets
 
             - name: Print secret values
               run: |
-                printf '%s\n' "IP: $db_host"
-                printf '%s\n' "Password: $db_password"
-                printf '%s\n' "Schema: $db_schema"
-                printf '%s\n' "User: $db_user"
+                printf '%s\n' "IP: ${{steps.get-secrets.outputs.db_host}}"
+                printf '%s\n' "Password: ${{steps.get-secrets.outputs.db_password}}"
+                printf '%s\n' "Schema: ${{steps.get-secrets.outputs.db_schema}}"
+                printf '%s\n' "User: ${{steps.get-secrets.outputs.db_user}}"
             
             # - name: Create a VM instance template
             #   run: |
