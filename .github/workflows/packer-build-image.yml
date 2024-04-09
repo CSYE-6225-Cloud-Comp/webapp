@@ -170,7 +170,7 @@ jobs:
             - name: Set new instance template to the existing instance group
               run: |
                 gcloud compute instance-groups managed set-instance-template lb-backend-example \
-                  --template=projects/tf-gcp-infra/regions/us-east1/instanceTemlates/webapp-instance-template \
+                  --template=projects/tf-gcp-infra/regions/us-east1/instanceTemplates/webapp-instance-template \
                   --region=us-east1 
             
             # - name: Recreate instances
