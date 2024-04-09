@@ -140,8 +140,7 @@ jobs:
                   --region=us-east1 \
                   --tags=webapp,allow-health-check,deny-webapp-traffic \
                   --scopes=https://www.googleapis.com/auth/cloud-platform \
-                  --metadata=startup-script=<<-EOT
-                  #!/bin/bash
+                  --metadata=startup-script='#! /bin/bash
                   cd /opt/webapp
               
                   if [ ! -f /opt/webapp/.env ]; then
@@ -165,7 +164,8 @@ jobs:
                       echo PORT=3000 >> .env
                       cat .env
                     fi
-                  fiEOT
+                  fi
+                  EOF'               
             - name: Set new instance template to the existing instance group
               run: |
                 gcloud compute instance-groups managed set-instance-template lb-backend-example \
@@ -181,7 +181,7 @@ jobs:
             - name: Recreate instances
               run: |
                 gcloud compute instance-groups managed rolling-action start-update lb-backend-example \
-                  --version=projects/tf-gcp-infra/regions/us-east1/instanceTemplates/webapp-instance-template \
+                  --version=template=projects/tf-gcp-infra/regions/us-east1/instanceTemplates/webapp-instance-template \
                   --region=us-east1
                   --replacement-method=RECREATE
             
