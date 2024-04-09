@@ -109,6 +109,9 @@ jobs:
             - name: Print secret values
               run: |
                 printf '%s\n' "IP: $db_host"
+                printf '%s\n' "Password: $db_password"
+                printf '%s\n' "Schema: $db_schema"
+                printf '%s\n' "User: $db_user"
             
             # - name: Create a VM instance template
             #   run: |
@@ -127,11 +130,11 @@ jobs:
             #       --metadata-from-file=startup-script=$GITHUB_WORKSPACE/packer/scripts/startup.sh
 
             - name: Create a VM instance template
-              env:
-                db_host: $db_host
-                db_password: $db_password
-                db_schema: $db_schema
-                db_user: $db_user
+              # env:
+              #   db_host: $db_host
+              #   db_password: $db_password
+              #   db_schema: $db_schema
+              #   db_user: $db_user
               run: |
                 gcloud compute instance-templates create webapp-instance-template \
                   --instance-template-region=us-east1 \
