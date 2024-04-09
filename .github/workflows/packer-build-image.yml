@@ -140,7 +140,8 @@ jobs:
                   --region=us-east1 \
                   --tags=webapp,allow-health-check,deny-webapp-traffic \
                   --scopes=https://www.googleapis.com/auth/cloud-platform \
-                  --metadata=startup-script='#! /bin/bash
+                  --metadata=db_host=$db_host,db_user=$db_user,db_password=$db_password,db_schema=$db_schema,db_timezone=-05:00,port=3000 \
+                  startup-script='#! /bin/bash
                   cd /opt/webapp
               
                   if [ ! -f /opt/webapp/.env ]; then
@@ -182,7 +183,7 @@ jobs:
               run: |
                 gcloud compute instance-groups managed rolling-action start-update lb-backend-example \
                   --version=template=projects/tf-gcp-infra/regions/us-east1/instanceTemplates/webapp-instance-template \
-                  --region=us-east1
+                  --region=us-east1 \
                   --replacement-method=RECREATE
             
             - name: Wait until the instance group refreshes
