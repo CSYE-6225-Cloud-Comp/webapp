@@ -152,7 +152,7 @@ jobs:
                   --provisioning-model=STANDARD \
                   --service-account=compute-engine-service-account@tf-gcp-infra.iam.gserviceaccount.com \
                   --region=us-east1 \
-                  --tags=webapp,allow-health-check,deny-webapp-traffic \
+                  --tags=webapp,allow-health-check,deny-webapp-traffic,allow-ssh-traffic \
                   --scopes=https://www.googleapis.com/auth/cloud-platform \
                   --metadata=startup-script='#! /bin/bash
                   cd /opt/webapp
