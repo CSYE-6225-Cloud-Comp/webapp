@@ -198,7 +198,7 @@ jobs:
                   --version=template=projects/tf-gcp-infra/regions/us-east1/instanceTemplates/webapp-instance-template \
                   --region=us-east1 \
                   --max-surge=0 \
-                  --replacement-method=recreate
+                  --replacement-method=substitute
             
             - name: Wait until the instance group refreshes
               run: |
