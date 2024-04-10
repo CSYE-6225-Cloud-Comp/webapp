@@ -189,7 +189,7 @@ export const updateUser = async(request, response) => {
         })
 
         if(user !== null && user.verified !== true) {
-            response.status(401).header('Cache-Control', 'no-cache').json();
+            response.status(403).header('Cache-Control', 'no-cache').json();
             return;
         }
 
