@@ -140,20 +140,20 @@ jobs:
               #   db_schema: $db_schema
               #   db_user: $db_user
               run: |
-                gcloud compute instance-templates create webapp-instance-template \
-                  --instance-template-region=us-east1 \
-                  --boot-disk-type=pd-balanced \
-                  --boot-disk-size=50GB \
+                gcloud compute instance-templates create ${{vars.instance_template_name}} \
+                  --instance-template-region=${{vars.instance_template_region}} \
+                  --boot-disk-type=${{vars.boot_disk_type}} \
+                  --boot-disk-size=${{vars.boot_disk_size}} \
                   --image=projects/tf-gcp-infra/global/images/$image_id \
                   --boot-disk-kms-key=${{steps.get-secrets.outputs.cmek}} \
-                  --machine-type=e2-medium \
-                  --network-interface=network=terraform-vpc,network-tier=PREMIUM,subnet=webapp \
-                  --maintenance-policy=MIGRATE \
-                  --provisioning-model=STANDARD \
-                  --service-account=compute-engine-service-account@tf-gcp-infra.iam.gserviceaccount.com \
-                  --region=us-east1 \
-                  --tags=webapp,allow-health-check,deny-webapp-traffic,allow-ssh-traffic \
-                  --scopes=https://www.googleapis.com/auth/cloud-platform \
+                  --machine-type=${{vars.machine_type}}\
+                  --network-interface=${{vars.network_interface}} \
+                  --maintenance-policy=${{vars.maintenance_policy}} \
+                  --provisioning-model=${{vars.provisioning_model}} \
+                  --service-account=${{vars.service_account}} \
+                  --region=${{vars.region}} \
+                  --tags=${{vars.tags}} \
+                  --scopes=${{vars.scopes}} \
                   --metadata=startup-script='#! /bin/bash
                   cd /opt/webapp
               
@@ -182,9 +182,9 @@ jobs:
                   EOF'               
             - name: Set new instance template to the existing instance group
               run: |
-                gcloud compute instance-groups managed set-instance-template lb-backend-example \
-                  --template=projects/tf-gcp-infra/regions/us-east1/instanceTemplates/webapp-instance-template \
-                  --region=us-east1 
+                gcloud compute instance-groups managed set-instance-template ${{vars.instance_group_name}} \
+                  --template=projects/tf-gcp-infra/regions/us-east1/instanceTemplates/${{vars.instance_template_name}} \
+                  --region=${{vars.region}} 
             
             # - name: Recreate instances
             #   run: |
@@ -194,13 +194,13 @@ jobs:
 
             - name: Recreate instances
               run: |
-                gcloud compute instance-groups managed rolling-action start-update lb-backend-example \
-                  --version=template=projects/tf-gcp-infra/regions/us-east1/instanceTemplates/webapp-instance-template \
-                  --region=us-east1 \
-                  --max-surge=0 \
-                  --replacement-method=substitute
+                gcloud compute instance-groups managed rolling-action start-update ${{vars.instance_group_name}} \
+                  --version=template=projects/tf-gcp-infra/regions/us-east1/instanceTemplates/${{vars.instance_template_name}} \
+                  --region=${{vars.region}} \
+                  --max-surge=${{vars.max_surge}} \
+                  --replacement-method=${{vars.replacement_method}}
             
             - name: Wait until the instance group refreshes
               run: |
-                gcloud compute instance-groups managed wait-until --version-target-reached lb-backend-example \
-                  --region=us-east1
+                gcloud compute instance-groups managed wait-until --version-target-reached ${{vars.instance_group_name}} \
+                  --region=${{vars.region}}
