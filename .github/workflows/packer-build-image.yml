@@ -104,6 +104,8 @@ jobs:
                 echo "db_password=$(gcloud secrets versions access latest --secret="db_password")" >> "$GITHUB_OUTPUT"
                 echo "db_schema=$(gcloud secrets versions access latest --secret="db_schema")" >> "$GITHUB_OUTPUT"
                 echo "db_user=$(gcloud secrets versions access latest --secret="db_user")" >> "$GITHUB_OUTPUT"
+                echo "cmek=$(gcloud secrets versions access latest --secret="cmek")" >> "$GITHUB_OUTPUT"
+                echo "key_ring=$(gcloud secrets versions access latest --secret="key_ring")" >> "$GITHUB_OUTPUT"
               id: get-secrets
 
             - name: Print secret values
@@ -112,6 +114,8 @@ jobs:
                 printf '%s\n' "Password: ${{steps.get-secrets.outputs.db_password}}"
                 printf '%s\n' "Schema: ${{steps.get-secrets.outputs.db_schema}}"
                 printf '%s\n' "User: ${{steps.get-secrets.outputs.db_user}}"
+                printf '%s\n' "CMEK: ${{steps.get-secrets.outputs.cmek}}"
+                printf '%s\n' "Key Ring: ${{steps.get-secrets.outputs.key_ring}}"
             
             # - name: Create a VM instance template
             #   run: |
@@ -141,6 +145,7 @@ jobs:
                   --boot-disk-type=pd-balanced \
                   --boot-disk-size=50GB \
                   --image=projects/tf-gcp-infra/global/images/$image_id \
+                  --boot-disk-kms-key=${{steps.get-secrets.outputs.cmek}} \
                   --machine-type=e2-medium \
                   --network-interface=network=terraform-vpc,network-tier=PREMIUM,subnet=webapp \
                   --maintenance-policy=MIGRATE \
@@ -192,6 +197,7 @@ jobs:
                 gcloud compute instance-groups managed rolling-action start-update lb-backend-example \
                   --version=template=projects/tf-gcp-infra/regions/us-east1/instanceTemplates/webapp-instance-template \
                   --region=us-east1 \
+                  --type=opportunistic
                   --max-surge=0 \
                   --replacement-method=recreate
             
