@@ -1,12 +1,12 @@
 name: Build Packer Template
-# on:
-#     pull_request:
-#         types:
-#             - closed
-on: [pull_request]
+on:
+    pull_request:
+        types:
+            - closed
+# on: [pull_request]
 jobs:
     if-merged:
-        if: github.event.pull_request.merged == false
+        if: github.event.pull_request.merged == true
         runs-on: ubuntu-latest
         env:
             DB_HOST: ${{ vars.DB_HOST }}
