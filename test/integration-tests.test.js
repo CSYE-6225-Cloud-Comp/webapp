@@ -11,7 +11,7 @@ describe("Account Creation and Updation", () => {
 
     // Create a new account and validate the account
     test("It should create a new account and validate the account", async () => {
-        const postResponse = await request(app).post("/v1/user")
+        const postResponse = await request(app).post("/v2/user")
             .send({
                 "first_name": "John",
                 "last_name": "Doe",
@@ -39,7 +39,7 @@ describe("Account Creation and Updation", () => {
         expect(updatedUser[0]).toBe(1);
 
         const encodedCredentials = Buffer.from("johndoe@example.com:password").toString('base64');
-        const getResponse = await request(app).get("/v1/user/self")
+        const getResponse = await request(app).get("/v2/user/self")
                                 .set("Authorization", `Basic ${encodedCredentials}`);
         console.log("getResponse: ", getResponse.body.username, postResponse.body.username);
         expect(getResponse.statusCode).toBe(200);
@@ -54,7 +54,7 @@ describe("Account Creation and Updation", () => {
     test('It should update an account and validate the account', async () => {
         
         const encodedCredentials = Buffer.from("johndoe@example.com:password").toString('base64');
-        const putResponse = await request(app).put('/v1/user/self')
+        const putResponse = await request(app).put('/v2/user/self')
             .set('Authorization', `Basic ${encodedCredentials}`)
             .send({
                 'first_name': 'Johnnny',
@@ -80,7 +80,7 @@ describe("Account Creation and Updation", () => {
         // expect(updatedUser[0]).toBe(1);
 
         const updatedEncodedCredentials = Buffer.from("johndoe@example.com:password1").toString('base64');
-        const getResponse = await request(app).get("/v1/user/self")
+        const getResponse = await request(app).get("/v2/user/self")
                                 .set("Authorization", `Basic ${updatedEncodedCredentials}`)
         expect(getResponse.statusCode).toBe(200);
         expect(getResponse.body.username).toEqual("johndoe@example.com");
